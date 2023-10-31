@@ -1,7 +1,7 @@
 export interface DefaultProps {}
 
 export interface IBottomSectionProps {
-  searchQuery: string;
+  searchQueryProp: string;
 }
 
 export interface IPlanet {
@@ -19,13 +19,6 @@ export interface IPlanet {
   surface_water: string;
   terrain: string;
   url: string;
-}
-
-export interface IBottomSectionState {
-  searchQuery: string;
-  planets: IPlanet[] | null;
-  isLoading: boolean;
-  error: null | Error;
 }
 
 export interface IPlanetListProps {

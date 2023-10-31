@@ -9,7 +9,7 @@ export default function TopSection() {
   useEffect(() => {
     const prevSearch = localStorage.getItem('search');
     if (prevSearch) {
-      setSearchQuery(JSON.parse(prevSearch));
+      setValue(JSON.parse(prevSearch));
     }
   }, []);
 
@@ -65,7 +65,7 @@ export default function TopSection() {
         </div>
       </section>
       <hr />
-      <BottomSection searchQuery={searchQuery} />
+      <BottomSection searchQueryProp={searchQuery} />
     </>
   );
 }
