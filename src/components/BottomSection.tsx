@@ -5,12 +5,12 @@ import { IBottomSectionProps, IPlanet } from '../models/index';
 const BASE_URL = 'https://swapi.dev/api/planets/';
 
 export default function BottomSection({
-  searchQueryProp,
+  searchQueryProps,
 }: IBottomSectionProps) {
   const [planets, setPlanets] = useState<IPlanet[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<null | Error>(null);
-  // const [searchQuery, setSearchQuery] = useState(searchQueryProp);
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     const prevSearch = localStorage.getItem('search');
@@ -19,14 +19,18 @@ export default function BottomSection({
         BASE_URL + '?search=' + JSON.parse(prevSearch) + '&offset=0&limit=10';
       fetchData(url);
     } else {
-      fetchData(BASE_URL + '&offset=0&limit=10');
+      fetchData(BASE_URL + '?offset=0&limit=10');
     }
   }, []);
 
   useEffect(() => {
-    const url = BASE_URL + '?search=' + searchQueryProp + '&offset=0&limit=10';
-    fetchData(url);
-  }, [searchQueryProp]);
+    if (searchQueryProps && searchQueryProps !== searchQuery) {
+      const url =
+        BASE_URL + '?search=' + searchQueryProps + '&offset=0&limit=10';
+      fetchData(url);
+      setSearchQuery(searchQueryProps);
+    }
+  }, [searchQueryProps]);
 
   async function fetchData(url: string) {
     setIsLoading(true);

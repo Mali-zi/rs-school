@@ -1,7 +1,7 @@
 export interface DefaultProps {}
 
 export interface IBottomSectionProps {
-  searchQueryProp: string;
+  searchQueryProps: string;
 }
 
 export interface IPlanet {

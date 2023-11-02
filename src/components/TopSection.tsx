@@ -65,7 +65,7 @@ export default function TopSection() {
         </div>
       </section>
       <hr />
-      <BottomSection searchQueryProp={searchQuery} />
+      <BottomSection searchQueryProps={searchQuery} />
     </>
   );
 }
