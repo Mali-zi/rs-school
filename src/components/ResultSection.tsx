@@ -1,33 +1,48 @@
 import React, { useEffect, useState } from 'react';
-import PlanetList from './BookList';
-import { IBottomSectionProps, IPlanet } from '../models/index';
+import BookList from './BookList';
+import { IBottomSectionProps, IBook } from '../models/index';
 
 const BASE_URL = 'https://openlibrary.org/';
 
-export default function ResultSection({ searchQuery }: IBottomSectionProps) {
-  const [planets, setPlanets] = useState<IPlanet[]>([]);
+export default function ResultSection({
+  searchQuery,
+  booksPerPage,
+}: IBottomSectionProps) {
+  const [books, setBooks] = useState<IBook[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<null | Error>(null);
   const [prevSearchQuery, setPrevSearchQuery] = useState('');
+  const [prevBooksPerPage, setPrevBooksPerPage] = useState(10);
 
   useEffect(() => {
     const prevSearch = localStorage.getItem('search');
     if (prevSearch) {
       const url =
-        BASE_URL + `?search=${JSON.parse(prevSearch)}&offset=0&limit=10`;
+        BASE_URL +
+        `search.json?q=${JSON.parse(
+          prevSearch
+        )}&author=conan%20doyle&offset=0&limit=${booksPerPage * 5}`;
       fetchData(url);
     } else {
-      fetchData(BASE_URL + `?offset=0&limit=10`);
+      fetchData(
+        BASE_URL +
+          `search.json?author=conan%20doyle&offset=0&limit=${booksPerPage * 5}`
+      );
     }
   }, []);
 
   useEffect(() => {
-    if (prevSearchQuery !== searchQuery) {
-      const url = BASE_URL + '?search=' + searchQuery + '&offset=0&limit=10';
+    if (prevSearchQuery !== searchQuery || booksPerPage !== prevBooksPerPage) {
+      const url =
+        BASE_URL +
+        `search.json?q=${searchQuery}&author=conan%20doyle&offset=0&limit=${
+          booksPerPage * 5
+        }`;
       fetchData(url);
       setPrevSearchQuery(searchQuery);
+      setPrevBooksPerPage(booksPerPage);
     }
-  }, [prevSearchQuery, searchQuery]);
+  }, [booksPerPage, prevBooksPerPage, prevSearchQuery, searchQuery]);
 
   async function fetchData(url: string) {
     setIsLoading(true);
@@ -40,8 +55,8 @@ export default function ResultSection({ searchQuery }: IBottomSectionProps) {
         return resp.json();
       })
       .then((result) => {
-        console.log('result.results', result.results);
-        setPlanets(result.results);
+        console.log('result.docs', result.docs);
+        setBooks(result.docs);
       })
       .catch((err) => {
         setError(err);
@@ -59,10 +74,10 @@ export default function ResultSection({ searchQuery }: IBottomSectionProps) {
     return <h2>Error: {error.message}</h2>;
   }
 
-  if (planets && planets.length) {
+  if (books && books.length) {
     return (
       <div>
-        <PlanetList planets={planets} />
+        <BookList books={books} booksPerPage={booksPerPage} />
       </div>
     );
   } else {

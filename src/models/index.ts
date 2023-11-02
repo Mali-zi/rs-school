@@ -2,35 +2,31 @@ export interface DefaultProps {}
 
 export interface IBottomSectionProps {
   searchQuery: string;
+  booksPerPage: number;
 }
 
-export interface IPlanet {
-  climate: string;
-  created: Date;
-  diameter: string;
-  edited: Date;
-  films: string[];
-  gravity: string;
-  name: string;
-  orbital_period: string;
-  population: string;
-  residents: string[];
-  rotation_period: string;
-  surface_water: string;
-  terrain: string;
-  url: string;
+export interface IBook {
+  key: string;
+  title: string;
+  subtitle?: string;
+  author_name?: string[];
+  isbn?: string[];
+  publisher?: string[];
+  publish_place?: string[];
+  publish_year?: number[];
+  first_publish_year?: number;
+  language?: string[];
+  ebook_access: string;
+  has_fulltext: boolean;
+  person?: string[];
+  seed: string[];
 }
 
-export interface IPlanetListProps {
-  planets: IPlanet[];
+export interface IBookListProps {
+  books: IBook[];
+  booksPerPage: number;
 }
 
-export interface ITopSectionState {
-  value: string;
-  searchQuery: string;
-  isValid: boolean;
-}
-
-export interface IPlanetProps {
-  planet: IPlanet;
+export interface IBookProps {
+  book: IBook;
 }
