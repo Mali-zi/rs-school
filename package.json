@@ -1,8 +1,8 @@
 {
-  "name": "films",
+  "name": "react-routing",
   "private": true,
   "version": "0.0.0",
-  "homepage": "http://mali-zi.github.io/star-wars",
+  "homepage": "http://mali-zi.github.io/react-routing",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -15,16 +15,14 @@
     "deploy": "gh-pages -d dist",
     "preview": "vite preview --port 8080"
   },
+  "lint-staged": {
+    "**/*.{ts,tsx}": "npm run lint",
+    "src/**/*.{js,jsx,ts,tsx,css,scss}": "npm run fix:format"
+  },
   "husky": {
     "hooks": {
       "pre-commit": "lint-staged"
     }
-  },
-  "lint-staged": {
-    "src/**/*.{js,ts,jsx,tsx}": [
-      "npm run fix:format",
-      "npm run lint"
-    ]
   },
   "dependencies": {
     "react": "^18.2.0",

@@ -1,36 +1,33 @@
 import React, { useEffect, useState } from 'react';
-import PlanetList from './PlanetList';
+import PlanetList from './BookList';
 import { IBottomSectionProps, IPlanet } from '../models/index';
 
-const BASE_URL = 'https://swapi.dev/api/planets/';
+const BASE_URL = 'https://openlibrary.org/';
 
-export default function BottomSection({
-  searchQueryProps,
-}: IBottomSectionProps) {
+export default function ResultSection({ searchQuery }: IBottomSectionProps) {
   const [planets, setPlanets] = useState<IPlanet[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<null | Error>(null);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [prevSearchQuery, setPrevSearchQuery] = useState('');
 
   useEffect(() => {
     const prevSearch = localStorage.getItem('search');
     if (prevSearch) {
       const url =
-        BASE_URL + '?search=' + JSON.parse(prevSearch) + '&offset=0&limit=10';
+        BASE_URL + `?search=${JSON.parse(prevSearch)}&offset=0&limit=10`;
       fetchData(url);
     } else {
-      fetchData(BASE_URL + '?offset=0&limit=10');
+      fetchData(BASE_URL + `?offset=0&limit=10`);
     }
   }, []);
 
   useEffect(() => {
-    if (searchQueryProps && searchQueryProps !== searchQuery) {
-      const url =
-        BASE_URL + '?search=' + searchQueryProps + '&offset=0&limit=10';
+    if (prevSearchQuery !== searchQuery) {
+      const url = BASE_URL + '?search=' + searchQuery + '&offset=0&limit=10';
       fetchData(url);
-      setSearchQuery(searchQueryProps);
+      setPrevSearchQuery(searchQuery);
     }
-  }, [searchQueryProps]);
+  }, [prevSearchQuery, searchQuery]);
 
   async function fetchData(url: string) {
     setIsLoading(true);
@@ -45,10 +42,11 @@ export default function BottomSection({
       .then((result) => {
         console.log('result.results', result.results);
         setPlanets(result.results);
-        setIsLoading(false);
       })
       .catch((err) => {
         setError(err);
+      })
+      .finally(() => {
         setIsLoading(false);
       });
   }

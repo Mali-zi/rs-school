@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import BottomSection from './BottomSection';
+import ResultSection from './ResultSection';
 
 export default function TopSection() {
   const [value, setValue] = useState('');
@@ -31,14 +31,14 @@ export default function TopSection() {
   return (
     <>
       <section className="col-lg-6 col-md-12">
-        <h2 className="planet-list-header">Planet List</h2>
+        <h2 className="planet-list-header">Book List</h2>
         <div className="mb-3">
           <form onSubmit={(e) => handleSubmit(e)}>
             <label
               htmlFor="search-form"
               className="form-label d-flex flex-column justify-content-start align-items-start fs-5"
             >
-              Search by planet name
+              Search by book title
               <div className="container-fluid d-flex p-0 align-items-stretch mt-2">
                 <input
                   id="search-form"
@@ -65,7 +65,7 @@ export default function TopSection() {
         </div>
       </section>
       <hr />
-      <BottomSection searchQueryProps={searchQuery} />
+      <ResultSection searchQuery={searchQuery} />
     </>
   );
 }
