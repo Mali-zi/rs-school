@@ -24,7 +24,6 @@ export interface IBook {
 
 export interface IBookListProps {
   books: IBook[];
-  booksPerPage: number;
 }
 
 export interface IBookProps {

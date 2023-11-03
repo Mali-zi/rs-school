@@ -11,8 +11,9 @@ export default function ResultSection({
   const [books, setBooks] = useState<IBook[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<null | Error>(null);
-  const [prevSearchQuery, setPrevSearchQuery] = useState('');
   const [prevBooksPerPage, setPrevBooksPerPage] = useState(10);
+  const [numFound, setNumFound] = useState<number>(0);
+  const [curentPage, setCurentPage] = useState(1);
 
   useEffect(() => {
     const prevSearch = localStorage.getItem('search');
@@ -21,28 +22,28 @@ export default function ResultSection({
         BASE_URL +
         `search.json?q=${JSON.parse(
           prevSearch
-        )}&author=conan%20doyle&offset=0&limit=${booksPerPage * 5}`;
+        )}&author=conan%20doyle&offset=0&limit=${booksPerPage}`;
       fetchData(url);
     } else {
       fetchData(
         BASE_URL +
-          `search.json?author=conan%20doyle&offset=0&limit=${booksPerPage * 5}`
+          `search.json?author=conan%20doyle&offset=0&limit=${booksPerPage}`
       );
     }
   }, []);
 
   useEffect(() => {
-    if (prevSearchQuery !== searchQuery || booksPerPage !== prevBooksPerPage) {
-      const url =
-        BASE_URL +
-        `search.json?q=${searchQuery}&author=conan%20doyle&offset=0&limit=${
-          booksPerPage * 5
-        }`;
-      fetchData(url);
-      setPrevSearchQuery(searchQuery);
-      setPrevBooksPerPage(booksPerPage);
+    const url =
+      BASE_URL +
+      `search.json?q=${searchQuery}&author=conan%20doyle&offset=${
+        (curentPage - 1) * booksPerPage
+      }&limit=${booksPerPage}`;
+    fetchData(url);
+    setPrevBooksPerPage(booksPerPage);
+    if (prevBooksPerPage !== booksPerPage) {
+      setCurentPage(1);
     }
-  }, [booksPerPage, prevBooksPerPage, prevSearchQuery, searchQuery]);
+  }, [booksPerPage, curentPage, prevBooksPerPage, searchQuery]);
 
   async function fetchData(url: string) {
     setIsLoading(true);
@@ -57,6 +58,7 @@ export default function ResultSection({
       .then((result) => {
         console.log('result.docs', result.docs);
         setBooks(result.docs);
+        setNumFound(result.numFound);
       })
       .catch((err) => {
         setError(err);
@@ -66,6 +68,35 @@ export default function ResultSection({
       });
   }
 
+  const pageAmount = Math.ceil(numFound / booksPerPage);
+  const pageArray: number[] = [];
+  for (let i = 0; i < pageAmount; i++) {
+    pageArray.push(i + 1);
+  }
+
+  const pageNumbers = pageArray.map((item, index) => {
+    return (
+      <li key={index} className="mx-1 number-list">
+        <input
+          type="radio"
+          className="btn-check"
+          name={`btnradio-${item}`}
+          id={`btnradio-${item}`}
+          value={item}
+          checked={curentPage === item}
+          onChange={() => {
+            setCurentPage(item);
+            console.log('item', item);
+            console.log('curentPage', curentPage);
+          }}
+        />
+        <label className="btn btn-outline-primary" htmlFor={`btnradio-${item}`}>
+          {item}
+        </label>
+      </li>
+    );
+  });
+
   if (isLoading) {
     return <h2>Loading...</h2>;
   }
@@ -74,10 +105,22 @@ export default function ResultSection({
     return <h2>Error: {error.message}</h2>;
   }
 
-  if (books && books.length) {
+  if (books && numFound) {
     return (
       <div>
-        <BookList books={books} booksPerPage={booksPerPage} />
+        <div className="flex-row d-flex justify-content-between fw-bolder mb-4">
+          <div className="d-inline p-2 text-bg-primary rounded-2">
+            Found: {numFound}
+          </div>
+          <ul
+            role="form"
+            aria-label="page-numbers"
+            className="d-flex flex-row "
+          >
+            {pageNumbers}
+          </ul>
+        </div>
+        <BookList books={books} />
       </div>
     );
   } else {

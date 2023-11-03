@@ -32,16 +32,9 @@ export default function TopSection() {
 
   const booksPerPageSection = booksPerPageArray.map((item, index) => {
     return (
-      <li key={index}>
-        <a
-          role="button"
-          type="button"
-          className="dropdown-item"
-          onClick={() => setBooksPerPage(item)}
-        >
-          {item}
-        </a>
-      </li>
+      <option key={index} className="text-bg-light fs-5 p-2" value={item}>
+        {item}
+      </option>
     );
   });
 
@@ -50,17 +43,19 @@ export default function TopSection() {
       <section className="col-lg-6 col-md-12">
         <h2 className="planet-list-header">For Conan Doyle fans</h2>
         <div className="mb-3">
-          <div className="dropdown">
-            <button
+          <label className="form-label d-flex flex-column justify-content-start align-items-start fs-5 mb-4">
+            Books Per Page:
+            <select
+              name="selectedNumber"
               className="btn btn-secondary dropdown-toggle"
-              type="button"
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
+              value={booksPerPage}
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                setBooksPerPage(Number(e.target.value))
+              }
             >
-              Books Per Page
-            </button>
-            <ul className="dropdown-menu">{booksPerPageSection}</ul>
-          </div>
+              {booksPerPageSection}
+            </select>
+          </label>
           <form onSubmit={(e) => handleSubmit(e)}>
             <label
               htmlFor="search-form"
