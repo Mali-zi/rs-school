@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { IBookProps } from '../models';
 
 export default function Book({ book }: IBookProps) {
@@ -9,13 +9,8 @@ export default function Book({ book }: IBookProps) {
     publisher,
     publish_place,
     publish_year,
-    // language,
     ebook_access,
-    // person,
-    // seed,
   } = book;
-
-  const [selectedKey, setSelectedKey] = useState('');
 
   const shortField = (value: string) => {
     if (value.length > 50) {
@@ -25,19 +20,12 @@ export default function Book({ book }: IBookProps) {
     }
   };
 
-  function handleClick() {
-    setSelectedKey(key);
-    console.log(selectedKey);
-  }
+  console.log('key in Book', key);
 
   return (
-    <button
-      type="button"
-      className="card border-dark mb-3 h-100 card-style"
-      onClick={handleClick}
-    >
+    <div className="card border-dark mb-3 h-100 card-style">
       <div className="card-header fs-4">
-        <div>{shortField(title)}</div>
+        <div className="author-name">{shortField(title)}</div>
         {author_name && (
           <div className="fs-6 text-dark-emphasis mt-2">
             Author: Arthur Conan Doyle
@@ -62,6 +50,6 @@ export default function Book({ book }: IBookProps) {
           <li className="list-group-item">ebook: {shortField(ebook_access)}</li>
         </ul>
       </div>
-    </button>
+    </div>
   );
 }

@@ -1,12 +1,16 @@
 import React from 'react';
-import { IBookListProps } from '../models/index';
+import { IBook, IBookList } from '../models/index';
 import Book from './Book';
+import { Link, Outlet, useLocation } from 'react-router-dom';
 
-export default function BookList({ books }: IBookListProps) {
+export default function BookList() {
+
   const list = books.map((book) => (
-    <li key={book.key}>
-      <Book book={book} />
-    </li>
+    <Link key={book.key} to={book.key}>
+      <li key={book.key}>
+        <Book book={book} />
+      </li>
+    </Link>
   ));
 
   return (

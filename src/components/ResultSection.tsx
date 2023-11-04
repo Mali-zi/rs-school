@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import BookList from './BookList';
 import { IBottomSectionProps, IBook } from '../models/index';
-
-const BASE_URL = 'https://openlibrary.org/';
+import { Link } from 'react-router-dom';
+import Book from './Book';
+import { BASE_URL } from '../utils/utils';
 
 export default function ResultSection({
   searchQuery,
@@ -16,37 +16,26 @@ export default function ResultSection({
   const [curentPage, setCurentPage] = useState(1);
 
   useEffect(() => {
-    const prevSearch = localStorage.getItem('search');
-    if (prevSearch) {
-      const url =
-        BASE_URL +
-        `search.json?q=${JSON.parse(
-          prevSearch
-        )}&author=conan%20doyle&offset=0&limit=${booksPerPage}`;
-      fetchData(url);
+    if (prevBooksPerPage !== booksPerPage) {
+      setCurentPage(1);
+      fetchData(searchQuery, 1, booksPerPage);
     } else {
-      fetchData(
-        BASE_URL +
-          `search.json?author=conan%20doyle&offset=0&limit=${booksPerPage}`
-      );
+      fetchData(searchQuery, curentPage, booksPerPage);
     }
-  }, []);
+    setPrevBooksPerPage(booksPerPage);
+  }, [booksPerPage, curentPage, prevBooksPerPage, searchQuery]);
 
-  useEffect(() => {
+  async function fetchData(
+    searchQuery: string,
+    curentPage: number,
+    booksPerPage: number
+  ) {
+    setIsLoading(true);
     const url =
       BASE_URL +
       `search.json?q=${searchQuery}&author=conan%20doyle&offset=${
         (curentPage - 1) * booksPerPage
       }&limit=${booksPerPage}`;
-    fetchData(url);
-    setPrevBooksPerPage(booksPerPage);
-    if (prevBooksPerPage !== booksPerPage) {
-      setCurentPage(1);
-    }
-  }, [booksPerPage, curentPage, prevBooksPerPage, searchQuery]);
-
-  async function fetchData(url: string) {
-    setIsLoading(true);
 
     await fetch(url)
       .then((resp) => {
@@ -56,7 +45,6 @@ export default function ResultSection({
         return resp.json();
       })
       .then((result) => {
-        console.log('result.docs', result.docs);
         setBooks(result.docs);
         setNumFound(result.numFound);
       })
@@ -86,8 +74,6 @@ export default function ResultSection({
           checked={curentPage === item}
           onChange={() => {
             setCurentPage(item);
-            console.log('item', item);
-            console.log('curentPage', curentPage);
           }}
         />
         <label className="btn btn-outline-primary" htmlFor={`btnradio-${item}`}>
@@ -120,7 +106,17 @@ export default function ResultSection({
             {pageNumbers}
           </ul>
         </div>
-        <BookList books={books} />
+        <div>
+          <ul className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-4 g-4">
+            {books.map((book) => (
+              <li key={book.key}>
+                <Link key={book.key} to={book.key}>
+                  <Book book={book} />
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
     );
   } else {

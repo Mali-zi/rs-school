@@ -29,3 +29,30 @@ export interface IBookListProps {
 export interface IBookProps {
   book: IBook;
 }
+
+export interface IBookList {
+  results: IBook[];
+}
+
+export interface IBookDetails {
+  first_publish_date: string;
+  key: string;
+  title: string;
+  covers: number[];
+  excerpts?: Excerpt[];
+  subjects?: string[];
+  links?: Link[];
+}
+export interface Type {
+  key: string;
+}
+
+export interface Excerpt {
+  excerpt: string;
+}
+
+export interface Link {
+  url: string;
+  title: string;
+  type: Type;
+}

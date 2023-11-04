@@ -1,19 +1,21 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import ResultSection from './ResultSection';
 
 export default function TopSection() {
-  const [value, setValue] = useState('');
-  const [searchQuery, setSearchQuery] = useState('');
+  const fetchLocalStorage = () => {
+    const prevSearch = localStorage.getItem('search');
+    if (prevSearch) {
+      return JSON.parse(prevSearch);
+    } else {
+      return '';
+    }
+  };
+
+  const [value, setValue] = useState(fetchLocalStorage());
+  const [searchQuery, setSearchQuery] = useState(fetchLocalStorage());
   const [isValid, setIsValid] = useState(true);
   const [booksPerPage, setBooksPerPage] = useState<number>(10);
   const booksPerPageArray: number[] = [10, 20, 30, 40, 50];
-
-  useEffect(() => {
-    const prevSearch = localStorage.getItem('search');
-    if (prevSearch) {
-      setValue(JSON.parse(prevSearch));
-    }
-  }, []);
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     setValue(e.target.value);
@@ -23,7 +25,7 @@ export default function TopSection() {
     e.preventDefault();
     if (value.trim()) {
       localStorage.setItem('search', JSON.stringify(value.trim()));
-      setSearchQuery(value);
+      setSearchQuery(value.trim());
       setIsValid(true);
     } else {
       setIsValid(false);

@@ -1,18 +1,15 @@
+import { Routes, Route } from 'react-router-dom';
 import './App.css';
-import TopSection from './components/TopSection';
-import ErrorBoundary from './components/ErrorBoundary';
+import BookDetails from './components/BookDetails';
+import Home from './pages/Home';
 
 function App() {
   return (
-    <div className="container-fluid">
-      <div className="row mt-4">
-        <div className="col m-4">
-          <ErrorBoundary>
-            <TopSection />
-          </ErrorBoundary>
-        </div>
-      </div>
-    </div>
+    <Routes>
+      <Route path="/" element={<Home />}>
+        <Route path="works/:key" element={<BookDetails />} />
+      </Route>
+    </Routes>
   );
 }
 
