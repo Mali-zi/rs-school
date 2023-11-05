@@ -4,4 +4,4 @@
 - Code Quality Tools: ESLint + Prettier + Husky
 - Deploy: [link](https://mali-zi-components.netlify.app/)
 - Screenshot:
-- ![](https://github.com/Mali-zi/react-routing/src/img/Routing.JPG)
+- ![](https://github.com/Mali-zi/react-routing/blob/react-routing-task/src/img/Routing.JPG)
