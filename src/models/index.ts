@@ -3,6 +3,7 @@ export interface DefaultProps {}
 export interface IBottomSectionProps {
   searchQuery: string;
   booksPerPage: number;
+  page: number;
 }
 
 export interface IBook {
@@ -35,10 +36,9 @@ export interface IBookList {
 }
 
 export interface IBookDetails {
-  first_publish_date: string;
   key: string;
   title: string;
-  covers: number[];
+  covers?: number[];
   excerpts?: Excerpt[];
   subjects?: string[];
   links?: Link[];
@@ -55,4 +55,15 @@ export interface Link {
   url: string;
   title: string;
   type: Type;
+}
+
+export interface ITopContext {
+  searchQuery: string;
+  booksPerPage: number;
+}
+
+export interface IPageNumbersSection {
+  numFound: number;
+  curentPage: number;
+  setCurentPage: (item: number) => void;
 }

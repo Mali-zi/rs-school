@@ -1,21 +1,22 @@
-import React, { useState } from 'react';
-import ResultSection from './ResultSection';
+import React, { useContext, useEffect, useState } from 'react';
+import { Outlet, useNavigate } from 'react-router-dom';
+import { TopContext } from '../pages/Home';
 
 export default function TopSection() {
-  const fetchLocalStorage = () => {
-    const prevSearch = localStorage.getItem('search');
-    if (prevSearch) {
-      return JSON.parse(prevSearch);
-    } else {
-      return '';
-    }
-  };
+  const initData = useContext(TopContext);
+  const initSearchQuery = initData ? initData.searchQuery : '';
 
-  const [value, setValue] = useState(fetchLocalStorage());
-  const [searchQuery, setSearchQuery] = useState(fetchLocalStorage());
+  const [value, setValue] = useState(initSearchQuery);
+  const [searchQuery, setSearchQuery] = useState(initSearchQuery);
   const [isValid, setIsValid] = useState(true);
   const [booksPerPage, setBooksPerPage] = useState<number>(10);
   const booksPerPageArray: number[] = [10, 20, 30, 40, 50];
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    navigate('/1');
+  }, []);
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     setValue(e.target.value);
@@ -23,10 +24,14 @@ export default function TopSection() {
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    if (value.trim()) {
-      localStorage.setItem('search', JSON.stringify(value.trim()));
-      setSearchQuery(value.trim());
+    const query = value.trim();
+    if (query) {
+      localStorage.setItem('search', JSON.stringify(query));
+      setSearchQuery(query);
       setIsValid(true);
+      navigate('/1', {
+        state: { query, booksPerPage },
+      });
     } else {
       setIsValid(false);
     }
@@ -41,7 +46,7 @@ export default function TopSection() {
   });
 
   return (
-    <>
+    <TopContext.Provider value={{ searchQuery, booksPerPage }}>
       <section className="col-lg-6 col-md-12">
         <h2 className="planet-list-header">For Conan Doyle fans</h2>
         <div className="mb-3">
@@ -90,7 +95,7 @@ export default function TopSection() {
         </div>
       </section>
       <hr />
-      <ResultSection searchQuery={searchQuery} booksPerPage={booksPerPage} />
-    </>
+      <Outlet />
+    </TopContext.Provider>
   );
 }

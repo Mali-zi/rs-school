@@ -36,8 +36,9 @@ export default class ErrorBoundary extends React.Component<Props, State> {
   render() {
     if (this.state.error) {
       return (
-        <div>
-          <h2>Something went wrong</h2>
+        <div className="d-flex flex-column text-center text-danger p-4 m-4">
+          <h2>Ooops! Something went wrong</h2>
+          <h3>Try to reload the page...</h3>
           <p>{this.state.error.name}</p>
           <p>{this.state.error.message}</p>
           <p>{this.state.error.toString()}</p>

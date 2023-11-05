@@ -1,29 +1,47 @@
-import React, { useEffect, useState } from 'react';
-import { IBottomSectionProps, IBook } from '../models/index';
-import { Link } from 'react-router-dom';
+import React, { useContext, useEffect, useState } from 'react';
+import { IBook } from '../models/index';
+import { Link, Outlet, useNavigate } from 'react-router-dom';
 import Book from './Book';
-import { BASE_URL } from '../utils/utils';
+import { BASE_URL } from '../utils/const';
 
-export default function ResultSection({
-  searchQuery,
-  booksPerPage,
-}: IBottomSectionProps) {
+import { TopContext } from '../pages/Home';
+import PageNumbersSection from './PageNumbersSection';
+
+export default function ResultSection() {
+  const navigate = useNavigate();
+
   const [books, setBooks] = useState<IBook[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<null | Error>(null);
   const [prevBooksPerPage, setPrevBooksPerPage] = useState(10);
   const [numFound, setNumFound] = useState<number>(0);
   const [curentPage, setCurentPage] = useState(1);
+  const [prevSearchQuery, setPrevSearchQuery] = useState('');
+
+  const data = useContext(TopContext);
 
   useEffect(() => {
-    if (prevBooksPerPage !== booksPerPage) {
-      setCurentPage(1);
-      fetchData(searchQuery, 1, booksPerPage);
-    } else {
-      fetchData(searchQuery, curentPage, booksPerPage);
+    if (data) {
+      fetchData(data.searchQuery, 1, data.booksPerPage);
     }
-    setPrevBooksPerPage(booksPerPage);
-  }, [booksPerPage, curentPage, prevBooksPerPage, searchQuery]);
+  }, []);
+
+  useEffect(() => {
+    if (data) {
+      if (
+        prevBooksPerPage !== data.booksPerPage ||
+        data.searchQuery !== prevSearchQuery
+      ) {
+        setCurentPage(1);
+        fetchData(data.searchQuery, 1, data.booksPerPage);
+        navigate('/1');
+      } else {
+        fetchData(data.searchQuery, curentPage, data.booksPerPage);
+      }
+      setPrevBooksPerPage(data.booksPerPage);
+      setPrevSearchQuery(data.searchQuery);
+    }
+  }, [data, curentPage]);
 
   async function fetchData(
     searchQuery: string,
@@ -56,33 +74,6 @@ export default function ResultSection({
       });
   }
 
-  const pageAmount = Math.ceil(numFound / booksPerPage);
-  const pageArray: number[] = [];
-  for (let i = 0; i < pageAmount; i++) {
-    pageArray.push(i + 1);
-  }
-
-  const pageNumbers = pageArray.map((item, index) => {
-    return (
-      <li key={index} className="mx-1 number-list">
-        <input
-          type="radio"
-          className="btn-check"
-          name={`btnradio-${item}`}
-          id={`btnradio-${item}`}
-          value={item}
-          checked={curentPage === item}
-          onChange={() => {
-            setCurentPage(item);
-          }}
-        />
-        <label className="btn btn-outline-primary" htmlFor={`btnradio-${item}`}>
-          {item}
-        </label>
-      </li>
-    );
-  });
-
   if (isLoading) {
     return <h2>Loading...</h2>;
   }
@@ -94,28 +85,26 @@ export default function ResultSection({
   if (books && numFound) {
     return (
       <div>
-        <div className="flex-row d-flex justify-content-between fw-bolder mb-4">
-          <div className="d-inline p-2 text-bg-primary rounded-2">
-            Found: {numFound}
+        <PageNumbersSection
+          numFound={numFound}
+          curentPage={curentPage}
+          setCurentPage={setCurentPage}
+        />
+        <div className="row">
+          <div className="col">
+            <ul className="row row-cols-1 row-cols-sm-2 g-4">
+              {books.map((book) => (
+                <li key={book.key}>
+                  <Link key={book.key} to={`/${curentPage}${book.key}`}>
+                    <Book book={book} />
+                  </Link>
+                </li>
+              ))}
+            </ul>
           </div>
-          <ul
-            role="form"
-            aria-label="page-numbers"
-            className="d-flex flex-row "
-          >
-            {pageNumbers}
-          </ul>
-        </div>
-        <div>
-          <ul className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-4 g-4">
-            {books.map((book) => (
-              <li key={book.key}>
-                <Link key={book.key} to={book.key}>
-                  <Book book={book} />
-                </Link>
-              </li>
-            ))}
-          </ul>
+          <Outlet />
+
+          <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-4 g-4"></div>
         </div>
       </div>
     );

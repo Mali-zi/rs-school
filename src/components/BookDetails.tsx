@@ -1,17 +1,27 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { IBookDetails } from '../models';
-import { BASE_URL } from '../utils/utils';
+import { BASE_URL } from '../utils/const';
+import { useOutsideClick } from '../hooks/useOutsideClick';
 
 export default function BookDetails() {
-  const [bookDetails, setBookDetails] = useState<IBookDetails | null>(null);
+  const ref = useOutsideClick(() => {
+    goHome();
+  });
+
+  const initBookDetails = {
+    key: '',
+    title: '',
+  };
+
+  const [bookDetails, setBookDetails] = useState<IBookDetails>(initBookDetails);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<null | Error>(null);
 
   const { key } = useParams();
   const navigate = useNavigate();
 
-  const goHome = () => navigate('/');
+  const goHome = () => navigate(-1);
 
   async function fetchData(url: string) {
     setIsLoading(true);
@@ -51,19 +61,42 @@ export default function BookDetails() {
 
   if (bookDetails) {
     return (
-      <div>
-        <p>Author: Arthur Conan Doyle</p>
-        {key}
-        <p>covers: {bookDetails.covers[0]}</p>
-        <p>title: {bookDetails.title}</p>
-        <p>first_publish_date: {bookDetails.first_publish_date}</p>
-        {bookDetails.links && <p>links: {bookDetails.links[0].url}</p>}
-        <button type="button" onClick={goHome}>
-          go back
-        </button>
+      <div className="col">
+        <div ref={ref} className="card w-100 open-card">
+          <div className="card-body">
+            {bookDetails && bookDetails.covers ? (
+              <img
+                src={`https://covers.openlibrary.org/b/id/${String(
+                  bookDetails.covers[0]
+                )}-L.jpg`}
+                className="card-img-top"
+                alt="cover"
+              />
+            ) : (
+              <h5 className="card-title text-danger">
+                Sorry, the book cover was not provided
+              </h5>
+            )}
+            <h5 className="card-title">
+              {bookDetails.title ? bookDetails.title : ' unspecified'}
+            </h5>
+            <h6 className="card-subtitle mb-2 text-body-secondary">
+              Key: {key}
+            </h6>
+            <div className="card-body text-dark">
+              <button
+                type="button"
+                className="btn btn-primary"
+                onClick={goHome}
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     );
   } else {
-    return <h2> Nothing found! </h2>;
+    return <h2> Nothing found, try again! </h2>;
   }
 }
