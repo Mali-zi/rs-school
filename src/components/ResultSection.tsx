@@ -103,8 +103,6 @@ export default function ResultSection() {
             </ul>
           </div>
           <Outlet />
-
-          <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-4 g-4"></div>
         </div>
       </div>
     );

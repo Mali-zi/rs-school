@@ -20,19 +20,19 @@ export default function PageNumbersSection({
   const pageNumbers = pageArray.map((item, index) => {
     return (
       <li key={index} className="mx-1 number-list">
+        <input
+          type="radio"
+          className="btn-check"
+          name={`btnradio-${item}`}
+          id={`btnradio-${item}`}
+          value={item}
+          checked={curentPage === item}
+          onChange={() => {
+            setCurentPage(item);
+            navigate(`/${item}`);
+          }}
+        />
         <label className="btn btn-outline-primary" htmlFor={`btnradio-${item}`}>
-          <input
-            type="radio"
-            className="btn-check"
-            name={`btnradio-${item}`}
-            id={`btnradio-${item}`}
-            value={item}
-            checked={curentPage === item}
-            onChange={() => {
-              setCurentPage(item);
-              navigate(`/${item}`);
-            }}
-          />
           {item}
         </label>
       </li>
