@@ -19,9 +19,7 @@ export default function Book({ book }: IBookProps) {
   return (
     <div className="card border-dark mb-3 h-100 card-style">
       <div className="card-header fs-4">
-        <div className="author-name">
-          {title ? shortField(title) : 'unspecified'}
-        </div>
+        <div className="author-name">{title && shortField(title)}</div>
         <div className="fs-6 text-dark-emphasis mt-2">
           Author: Arthur Conan Doyle
         </div>
@@ -29,17 +27,16 @@ export default function Book({ book }: IBookProps) {
       <div className="card-body text-dark">
         <ul className="list-group list-group-flush">
           <li className="list-group-item">
-            publisher: {publisher ? shortField(publisher[0]) : 'unspecified'}
+            publisher: {publisher && shortField(publisher[0])}
           </li>
           <li className="list-group-item">
-            publish place:{' '}
-            {publish_place ? shortField(publish_place[0]) : 'unspecified'}
+            publish place: {publish_place && shortField(publish_place[0])}
           </li>
           <li className="list-group-item">
-            publish year: {publish_year ? publish_year[0] : 'unspecified'}
+            publish year: {publish_year && publish_year[0]}
           </li>
           <li className="list-group-item">
-            ebook: {ebook_access ? shortField(ebook_access) : 'unspecified'}
+            ebook: {ebook_access && shortField(ebook_access)}
           </li>
         </ul>
       </div>

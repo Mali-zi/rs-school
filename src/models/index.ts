@@ -67,3 +67,8 @@ export interface IPageNumbersSection {
   curentPage: number;
   setCurentPage: (item: number) => void;
 }
+
+export interface IResultContext {
+  books: IBook[];
+  curentPage: number;
+}

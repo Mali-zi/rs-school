@@ -1,11 +1,16 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { IBook } from '../models/index';
-import { Link, Outlet, useNavigate } from 'react-router-dom';
-import Book from './Book';
+import React, { createContext, useContext, useEffect, useState } from 'react';
+import { IBook, IResultContext } from '../models/index';
+import { Outlet, useNavigate } from 'react-router-dom';
 import { BASE_URL } from '../utils/const';
 
 import { TopContext } from '../pages/Home';
 import PageNumbersSection from './PageNumbersSection';
+import BookList from './BookList';
+
+export const ResultContext = createContext<IResultContext>({
+  books: [],
+  curentPage: 1,
+});
 
 export default function ResultSection() {
   const navigate = useNavigate();
@@ -91,17 +96,9 @@ export default function ResultSection() {
           setCurentPage={setCurentPage}
         />
         <div className="row">
-          <div className="col">
-            <ul className="row row-cols-1 row-cols-sm-2 g-4">
-              {books.map((book) => (
-                <li key={book.key}>
-                  <Link key={book.key} to={`/${curentPage}${book.key}`}>
-                    <Book book={book} />
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
+          <ResultContext.Provider value={{ books, curentPage }}>
+            <BookList />
+          </ResultContext.Provider>
           <Outlet />
         </div>
       </div>
