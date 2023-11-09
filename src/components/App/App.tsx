@@ -1,9 +1,9 @@
 import { Routes, Route, BrowserRouter } from 'react-router-dom';
 import './App.css';
 import BookDetails from '../BookDetails';
-import Home from '../../pages/Home';
+import Home from '../../pages/Home/Home';
 import ResultSection from '../ResultSection';
-import Page404 from '../../pages/Page404';
+import Page404 from '../../pages/Page404/Page404';
 
 function App() {
   return (

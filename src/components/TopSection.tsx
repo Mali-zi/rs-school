@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
-import { TopContext } from '../pages/Home';
+import { TopContext } from '../pages/Home/Home';
 
 export default function TopSection() {
   const initData = useContext(TopContext);

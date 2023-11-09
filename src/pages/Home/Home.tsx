@@ -1,11 +1,11 @@
 import React, { createContext } from 'react';
-import TopSection from '../components/TopSection';
-import ErrorBoundary from '../components/ErrorBoundary';
-import { ITopContext } from '../models';
+import TopSection from '../../components/TopSection';
+import ErrorBoundary from '../../components/ErrorBoundary';
+import { ITopContext } from '../../models';
 
 export const TopContext = createContext<ITopContext | null>(null);
 
-export default function Main() {
+export default function Home() {
   const fetchLocalStorage = () => {
     const prevSearch = localStorage.getItem('search');
     if (prevSearch) {
