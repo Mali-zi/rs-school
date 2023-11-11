@@ -3,9 +3,9 @@ import { IBook, IResultContext } from '../models/index';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { BASE_URL } from '../utils/const';
 
-import { TopContext } from '../pages/Home/Home';
+import { TopContext } from '../components/TopSection/TopSection';
 import PageNumbersSection from './PageNumbersSection';
-import BookList from './BookList';
+import BookList from './BookList/BookList';
 
 export const ResultContext = createContext<IResultContext>({
   books: [],
@@ -27,12 +27,6 @@ export default function ResultSection() {
 
   useEffect(() => {
     if (data) {
-      fetchData(data.searchQuery, 1, data.booksPerPage);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (data) {
       if (
         prevBooksPerPage !== data.booksPerPage ||
         data.searchQuery !== prevSearchQuery
@@ -46,7 +40,7 @@ export default function ResultSection() {
       setPrevBooksPerPage(data.booksPerPage);
       setPrevSearchQuery(data.searchQuery);
     }
-  }, [data, curentPage]);
+  }, [data.searchQuery, data.booksPerPage, curentPage]);
 
   async function fetchData(
     searchQuery: string,

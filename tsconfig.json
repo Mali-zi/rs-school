@@ -15,8 +15,9 @@
     "isolatedModules": true,
     "noImplicitAny": true,
     "noEmit": true,
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    "types": ["vitest/globals", "@testing-library/jest-dom"],
   },
-  "include": ["src"],
+  "include": ["src", "./setupTest.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

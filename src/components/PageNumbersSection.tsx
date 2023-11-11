@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { TopContext } from '../pages/Home/Home';
+import { TopContext } from '../components/TopSection/TopSection';
 import { IPageNumbersSection } from '../models';
 
 export default function PageNumbersSection({

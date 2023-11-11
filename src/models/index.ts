@@ -17,10 +17,10 @@ export interface IBook {
   publish_year?: number[];
   first_publish_year?: number;
   language?: string[];
-  ebook_access: string;
-  has_fulltext: boolean;
+  ebook_access?: string;
+  has_fulltext?: boolean;
   person?: string[];
-  seed: string[];
+  seed?: string[];
 }
 
 export interface IBookListProps {

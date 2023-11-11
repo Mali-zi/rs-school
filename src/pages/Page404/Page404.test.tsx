@@ -1,9 +1,8 @@
-import { describe, test, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import Page404 from './Page404';
 
-describe('<Page404 />', () => {
-  test('Page404 mounts properly', () => {
+describe('Page404', () => {
+  it('Page404 mounts properly', () => {
     const wrapper = render(<Page404 />);
     expect(wrapper).toBeTruthy();
 
@@ -12,7 +11,7 @@ describe('<Page404 />', () => {
     expect(h2?.textContent).toBe('Page not found');
 
     // Get by title using the React testing library
-    const title = screen.getByText(/Page not found/i);
-    expect(title.textContent).toBeTruthy();
+    const p = screen.getByText(/no such page was found/i);
+    expect(p.textContent).toBeTruthy();
   });
 });
