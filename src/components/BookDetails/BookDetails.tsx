@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import { IBookDetails } from '../../models';
 import { BASE_URL } from '../../utils/const';
 import DetailsSection from './DetailsSection';
+import { getData } from '../../utils/services';
 
 export default function BookDetails() {
   const [bookDetails, setBookDetails] = useState<IBookDetails | null>(null);
@@ -11,14 +12,11 @@ export default function BookDetails() {
 
   const { key } = useParams();
 
-  async function fetchDetails(url: string) {
-    await fetch(url)
-      .then((resp) => {
-        if (!resp.ok) {
-          throw new Error('Server responds with error!');
-        }
-        return resp.json();
-      })
+  async function fetchDetails(key: string | undefined) {
+    const url = BASE_URL + `works/${key}.json`;
+    setDetailsLoading(true);
+
+    getData(url)
       .then((result) => {
         setBookDetails(result);
         setDetailsLoading(false);
@@ -30,12 +28,8 @@ export default function BookDetails() {
   }
 
   useEffect(() => {
-    if (key) {
-      const url = BASE_URL + `works/${key}.json`;
-      setDetailsLoading(true);
-      fetchDetails(url);
-    }
-  }, [key]);
+    fetchDetails(key);
+  }, []);
 
   if (error) {
     return <h2>Error: {error.message}</h2>;

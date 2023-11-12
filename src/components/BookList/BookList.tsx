@@ -8,7 +8,7 @@ export default function BookList() {
 
   const rendList = useCallback(() => {
     const list = data.books.map((book) => (
-      <li key={book.key} id="">
+      <li key={book.key}>
         <Link key={book.key} to={`/${data.curentPage}${book.key}`}>
           <Book book={book} />
         </Link>
