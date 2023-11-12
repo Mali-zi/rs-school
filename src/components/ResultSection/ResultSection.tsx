@@ -5,7 +5,7 @@ import { BASE_URL } from '../../utils/const';
 import { getData } from '../../utils/services';
 
 import { TopContext } from '../TopSection/TopSection';
-import PageNumbersSection from '../PageNumbersSection';
+import PageNumbersSection from '../PageNumbersSection/PageNumbersSection';
 import BookList from '../BookList/BookList';
 
 export const ResultContext = createContext<IResultContext>({

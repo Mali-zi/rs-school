@@ -65,7 +65,7 @@ export interface ITopContext {
 export interface IPageNumbersSection {
   numFound: number;
   curentPage: number;
-  setCurentPage: (item: number) => void;
+  setCurentPage?: (item: number) => void;
 }
 
 export interface IResultContext {
