@@ -9,12 +9,9 @@ export default function BookList() {
   const rendList = useCallback(() => {
     const list = data.books.map((book) => (
       <li key={book.key}>
-        <div className="card border-dark mb-3 h-100 card-style">
-          <Link key={book.key} to={`/${data.curentPage}${book.key}`}>
-            <div className="card-header fs-6 mt-2">Key: {book.key}</div>
-          </Link>
+        <Link key={book.key} to={`/${data.curentPage}${book.key}`}>
           <Book book={book} />
-        </div>
+        </Link>
       </li>
     ));
 

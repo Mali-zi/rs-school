@@ -7,7 +7,11 @@ describe('<PageNumbersSection />', () => {
   it('PageNumbersSection mounts properly', () => {
     const wrapper = render(
       <BrowserRouter>
-        <PageNumbersSection numFound={175} curentPage={1} />
+        <PageNumbersSection
+          numFound={175}
+          curentPage={1}
+          setCurentPage={() => {}}
+        />
       </BrowserRouter>
     );
     expect(wrapper).toBeTruthy();
