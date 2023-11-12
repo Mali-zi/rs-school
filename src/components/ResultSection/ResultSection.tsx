@@ -1,11 +1,12 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { IBook, IResultContext } from '../models/index';
+import { IBook, IResultContext } from '../../models/index';
 import { Outlet, useNavigate } from 'react-router-dom';
-import { BASE_URL } from '../utils/const';
+import { BASE_URL } from '../../utils/const';
+import { getData } from '../../utils/services';
 
-import { TopContext } from '../components/TopSection/TopSection';
-import PageNumbersSection from './PageNumbersSection';
-import BookList from './BookList/BookList';
+import { TopContext } from '../TopSection/TopSection';
+import PageNumbersSection from '../PageNumbersSection';
+import BookList from '../BookList/BookList';
 
 export const ResultContext = createContext<IResultContext>({
   books: [],
@@ -16,8 +17,8 @@ export default function ResultSection() {
   const navigate = useNavigate();
 
   const [books, setBooks] = useState<IBook[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<null | Error>(null);
+  const [resultLoading, setResultLoading] = useState(true);
+  const [fetchError, setFetchError] = useState<null | Error>(null);
   const [prevBooksPerPage, setPrevBooksPerPage] = useState(10);
   const [numFound, setNumFound] = useState<number>(0);
   const [curentPage, setCurentPage] = useState(1);
@@ -47,57 +48,50 @@ export default function ResultSection() {
     curentPage: number,
     booksPerPage: number
   ) {
-    setIsLoading(true);
     const url =
       BASE_URL +
       `search.json?q=${searchQuery}&author=conan%20doyle&offset=${
         (curentPage - 1) * booksPerPage
       }&limit=${booksPerPage}`;
+    setResultLoading(true);
 
-    await fetch(url)
-      .then((resp) => {
-        if (!resp.ok) {
-          throw new Error('Server responds with error!');
-        }
-        return resp.json();
-      })
+    getData(url)
       .then((result) => {
         setBooks(result.docs);
         setNumFound(result.numFound);
+        setResultLoading(false);
       })
-      .catch((err) => {
-        setError(err);
-      })
-      .finally(() => {
-        setIsLoading(false);
+      .catch((err: Error | null) => {
+        setFetchError(err);
+        setResultLoading(false);
       });
   }
 
-  if (isLoading) {
+  if (fetchError) {
+    return <h2>Error: {fetchError.message}</h2>;
+  }
+
+  if (resultLoading) {
     return <h2>Loading...</h2>;
-  }
-
-  if (error) {
-    return <h2>Error: {error.message}</h2>;
-  }
-
-  if (books && numFound) {
-    return (
-      <div>
-        <PageNumbersSection
-          numFound={numFound}
-          curentPage={curentPage}
-          setCurentPage={setCurentPage}
-        />
-        <div className="row">
-          <ResultContext.Provider value={{ books, curentPage }}>
-            <BookList />
-          </ResultContext.Provider>
-          <Outlet />
-        </div>
-      </div>
-    );
   } else {
-    return <h2> Nothing found! </h2>;
+    if (books && numFound) {
+      return (
+        <div>
+          <PageNumbersSection
+            numFound={numFound}
+            curentPage={curentPage}
+            setCurentPage={setCurentPage}
+          />
+          <div className="row">
+            <ResultContext.Provider value={{ books, curentPage }}>
+              <BookList />
+            </ResultContext.Provider>
+            <Outlet />
+          </div>
+        </div>
+      );
+    } else {
+      return <h2> Nothing found! </h2>;
+    }
   }
 }

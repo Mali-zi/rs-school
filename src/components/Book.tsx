@@ -2,7 +2,8 @@ import React from 'react';
 import { IBookProps } from '../models';
 
 export default function Book({ book }: IBookProps) {
-  const { title, publisher, publish_place, publish_year, ebook_access } = book;
+  const { key, title, publisher, publish_place, publish_year, ebook_access } =
+    book;
 
   const shortField = (value: string) => {
     if (value) {
@@ -19,6 +20,11 @@ export default function Book({ book }: IBookProps) {
   return (
     <div className="card border-dark mb-3 h-100 card-style">
       <div className="card-header fs-4">
+        <div className="fs-6 text-dark-emphasis mt-2">
+          Key: {key && shortField(key)}
+        </div>
+
+        <div className="fs-6 text-dark-emphasis mt-2">Title:</div>
         <div className="author-name">{title && shortField(title)}</div>
         <div className="fs-6 text-dark-emphasis mt-2">
           Author: Arthur Conan Doyle

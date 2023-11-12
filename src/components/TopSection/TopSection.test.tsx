@@ -1,8 +1,74 @@
 import React from 'react';
 import userEvent from '@testing-library/user-event';
-import { render, screen } from '@testing-library/react';
+import { cleanup, render, screen, waitFor } from '@testing-library/react';
 import TopSection from './TopSection';
 import { BrowserRouter } from 'react-router-dom';
+
+afterEach(cleanup);
+
+const localStorageMock = (() => {
+  const store: { [key: string]: string } = {};
+
+  return {
+    getItem: (key: string) => store[key] || null,
+    setItem: (key: string, value: string) => {
+      store[key] = value.toString();
+    },
+  };
+})();
+
+Object.defineProperty(window, 'localStorage', {
+  value: localStorageMock,
+});
+
+describe('Testing localStorage', () => {
+  it('TopSection component retrieves the value from the local storage upon mounting', async () => {
+    const user = userEvent.setup();
+
+    const wrapper = render(
+      <BrowserRouter>
+        <TopSection />
+      </BrowserRouter>
+    );
+    expect(wrapper).toBeTruthy();
+    const inputElement: HTMLInputElement = screen.getByTestId('searchbox');
+
+    await user.clear(inputElement);
+    await user.type(inputElement, 'bye');
+    await user.click(screen.getByTestId('submitButton'));
+    wrapper.unmount();
+
+    render(
+      <BrowserRouter>
+        <TopSection />
+      </BrowserRouter>
+    );
+
+    await waitFor(() => {
+      expect(inputElement.value).toBe('bye');
+    });
+  });
+
+  it('Verify that clicking the Search button saves the entered value to the local storage', async () => {
+    const user = userEvent.setup();
+
+    render(
+      <BrowserRouter>
+        <TopSection />
+      </BrowserRouter>
+    );
+    const inputElement: HTMLInputElement = screen.getByTestId('searchbox');
+
+    await user.clear(inputElement);
+    await user.type(inputElement, 'hi');
+    await user.click(screen.getByTestId('submitButton'));
+
+    const savedQuery = localStorage.getItem('search');
+    if (savedQuery) {
+      expect(JSON.parse(savedQuery)).toEqual('hi');
+    }
+  });
+});
 
 describe('TopSection', () => {
   it('Display the correct number of options', () => {
@@ -62,7 +128,7 @@ describe('TopSection', () => {
     );
 
     const inputElement: HTMLInputElement = screen.getByTestId('searchbox');
-
+    await user.clear(inputElement);
     await user.type(inputElement, 'hello');
     expect(inputElement.value).toBe('hello');
     await user.click(screen.getByTestId('submitButton'));
@@ -82,45 +148,5 @@ describe('TopSection', () => {
     await user.clear(inputElement);
     await user.click(screen.getByTestId('submitButton'));
     expect(screen.getByText(/The query isn't valid/i)).toBeInTheDocument();
-  });
-
-  it('Verify that clicking the Search button saves the entered value to the local storage', async () => {
-    const user = userEvent.setup();
-
-    render(
-      <BrowserRouter>
-        <TopSection />
-      </BrowserRouter>
-    );
-    const inputElement: HTMLInputElement = screen.getByTestId('searchbox');
-
-    await user.clear(inputElement);
-    await user.type(inputElement, 'hi');
-    await user.click(screen.getByTestId('submitButton'));
-
-    const savedQuery = window.localStorage.getItem('search');
-    if (savedQuery) {
-      expect(JSON.parse(savedQuery)).toEqual('hi');
-    }
-  });
-
-  it('Check that the component retrieves the value from the local storage upon mounting', async () => {
-    const user = userEvent.setup();
-
-    render(
-      <BrowserRouter>
-        <TopSection />
-      </BrowserRouter>
-    );
-    const inputElement: HTMLInputElement = screen.getByTestId('searchbox');
-
-    await user.clear(inputElement);
-    await user.type(inputElement, 'hi');
-    await user.click(screen.getByTestId('submitButton'));
-
-    const savedQuery = window.localStorage.getItem('search');
-    if (savedQuery) {
-      expect(JSON.parse(savedQuery)).toEqual('hi');
-    }
   });
 });

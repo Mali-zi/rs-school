@@ -1,5 +1,5 @@
 import React, { useCallback, useContext } from 'react';
-import { ResultContext } from '../ResultSection';
+import { ResultContext } from '../ResultSection/ResultSection';
 import { Link } from 'react-router-dom';
 import Book from '../Book';
 
@@ -8,7 +8,7 @@ export default function BookList() {
 
   const rendList = useCallback(() => {
     const list = data.books.map((book) => (
-      <li key={book.key}>
+      <li key={book.key} id="">
         <Link key={book.key} to={`/${data.curentPage}${book.key}`}>
           <Book book={book} />
         </Link>

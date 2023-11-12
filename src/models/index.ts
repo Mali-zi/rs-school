@@ -72,3 +72,7 @@ export interface IResultContext {
   books: IBook[];
   curentPage: number;
 }
+
+export interface IDetailsSection {
+  bookDetails: IBookDetails;
+}
