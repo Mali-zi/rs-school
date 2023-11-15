@@ -1,17 +1,16 @@
-import React, { useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { TopContext } from '../TopSection/TopSection';
-import { IPageNumbersSection } from '../../models';
+import React from 'react';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { setCurentPage } from '../../features/curentPageSlice';
 
-export default function PageNumbersSection({
-  numFound,
-  curentPage,
-  setCurentPage,
-}: IPageNumbersSection) {
-  const data = useContext(TopContext);
-  const navigate = useNavigate();
+export default function PageNumbersSection() {
+  const dispatch = useAppDispatch();
+  const booksPerPage = useAppSelector(
+    (state) => state.booksPerPage.selectedNumber
+  );
+  const curentPage = useAppSelector((state) => state.curentPage.curentPage);
+  const numFound = useAppSelector((state) => state.books.numFound);
 
-  const pageAmount = data ? Math.ceil(numFound / data.booksPerPage) : 0;
+  const pageAmount = Math.ceil(numFound / booksPerPage);
   const pageArray: number[] = [];
   for (let i = 0; i < pageAmount; i++) {
     pageArray.push(i + 1);
@@ -28,8 +27,7 @@ export default function PageNumbersSection({
           value={item}
           checked={curentPage === item}
           onChange={() => {
-            setCurentPage(item);
-            navigate(`/${item}`);
+            dispatch(setCurentPage(item));
           }}
         />
         <label className="btn btn-outline-primary" htmlFor={`btnradio-${item}`}>

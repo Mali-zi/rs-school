@@ -1,8 +1,10 @@
 import { useNavigate } from 'react-router-dom';
 import { IDetailsSection } from '../../models';
+import { useAppSelector } from '../../app/hooks';
 
 const DetailsSection = ({ bookDetails }: IDetailsSection) => {
   const navigate = useNavigate();
+  const curentPage = useAppSelector((state) => state.curentPage.curentPage);
 
   return (
     <div className="col">
@@ -32,7 +34,7 @@ const DetailsSection = ({ bookDetails }: IDetailsSection) => {
               type="button"
               data-testid="close"
               className="btn btn-primary"
-              onClick={() => navigate(-1)}
+              onClick={() => navigate(`/${curentPage}`)}
             >
               Close
             </button>

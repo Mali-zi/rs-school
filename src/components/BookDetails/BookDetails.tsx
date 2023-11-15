@@ -1,38 +1,25 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { IBookDetails } from '../../models';
-import { BASE_URL } from '../../utils/const';
 import DetailsSection from './DetailsSection';
-import { getData } from '../../utils/services';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { fetchDetails } from '../../features/detailsSlice';
 
 export default function BookDetails() {
-  const [bookDetails, setBookDetails] = useState<IBookDetails | null>(null);
-  const [detailsLoading, setDetailsLoading] = useState(true);
-  const [error, setError] = useState<null | Error>(null);
+  const dispatch = useAppDispatch();
+  const { bookDetails, detailsError, detailsLoading } = useAppSelector(
+    (state) => state.details
+  );
 
   const { key } = useParams();
 
-  async function fetchDetails(key: string | undefined) {
-    const url = BASE_URL + `works/${key}.json`;
-    setDetailsLoading(true);
-
-    getData(url)
-      .then((result) => {
-        setBookDetails(result);
-        setDetailsLoading(false);
-      })
-      .catch((err) => {
-        setError(err);
-        setDetailsLoading(false);
-      });
-  }
-
   useEffect(() => {
-    fetchDetails(key);
-  }, []);
+    if (key) {
+      dispatch(fetchDetails(key));
+    }
+  }, [key]);
 
-  if (error) {
-    return <h2>Error: {error.message}</h2>;
+  if (detailsError) {
+    return <h2>Error: {detailsError.toString()}</h2>;
   }
 
   if (detailsLoading) {

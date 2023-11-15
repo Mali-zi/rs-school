@@ -1,37 +1,19 @@
-import React, { createContext, useCallback, useEffect, useState } from 'react';
-import { Outlet, useNavigate } from 'react-router-dom';
-import { ITopContext } from '../../models';
-
-export const TopContext = createContext<ITopContext>({
-  searchQuery: '',
-  booksPerPage: 10,
-});
+import React, { useCallback, useState } from 'react';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { Outlet } from 'react-router-dom';
+import { selectNumber } from '../../features/booksPerPageSlice';
+import { setSearchQuery } from '../../features/searchSlice';
 
 export default function TopSection() {
-  const fetchLocalStorage = () => {
-    const prevSearch = localStorage.getItem('search');
-    if (prevSearch) {
-      return JSON.parse(prevSearch);
-    } else {
-      return '';
-    }
-  };
+  const dispatch = useAppDispatch();
+  const booksPerPage = useAppSelector(
+    (state) => state.booksPerPage.selectedNumber
+  );
 
-  const initQuery = fetchLocalStorage();
-
-  const [value, setValue] = useState(initQuery);
-  const [searchQuery, setSearchQuery] = useState(initQuery);
-
-  useEffect(() => {
-    navigate('/1');
-  }, []);
-
+  const [value, setValue] = useState('');
   const [isValid, setIsValid] = useState(true);
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [booksPerPage, setBooksPerPage] = useState<number>(10);
   const booksPerPageArray: number[] = [10, 20, 30, 40, 50];
-
-  const navigate = useNavigate();
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     setValue(e.target.value);
@@ -43,8 +25,7 @@ export default function TopSection() {
     e.preventDefault();
     const query = value.trim();
     if (query) {
-      localStorage.setItem('search', JSON.stringify(query));
-      setSearchQuery(query);
+      dispatch(setSearchQuery(query));
       setIsValid(true);
       setIsSubmitted(true);
     } else {
@@ -76,7 +57,7 @@ export default function TopSection() {
               className="btn btn-secondary dropdown-toggle"
               value={booksPerPage}
               onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-                setBooksPerPage(Number(e.target.value))
+                dispatch(selectNumber(Number(e.target.value)))
               }
             >
               {booksPerPageSection()}
@@ -116,9 +97,7 @@ export default function TopSection() {
         </div>
       </section>
       <hr />
-      <TopContext.Provider value={{ searchQuery, booksPerPage }}>
-        <Outlet />
-      </TopContext.Provider>
+      <Outlet />
     </>
   );
 }
