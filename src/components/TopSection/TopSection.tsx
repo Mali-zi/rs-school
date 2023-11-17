@@ -1,10 +1,11 @@
 import React, { useCallback, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 import { selectNumber } from '../../features/booksPerPageSlice';
 import { setSearchQuery } from '../../features/searchSlice';
 
 export default function TopSection() {
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const booksPerPage = useAppSelector(
     (state) => state.booksPerPage.selectedNumber
@@ -28,6 +29,7 @@ export default function TopSection() {
       dispatch(setSearchQuery(query));
       setIsValid(true);
       setIsSubmitted(true);
+      navigate(`/1`);
     } else {
       setIsValid(false);
     }
