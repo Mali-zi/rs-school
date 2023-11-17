@@ -5,9 +5,9 @@ export default function Page404() {
     <main className="container">
       <div className="row">
         <div className="col">
-          <section>
-            <h2 className="text-center">Page not found</h2>
-            <p className="text-center">Sorry, no such page was found!</p>
+          <section className="page404">
+            <p>Page not found</p>
+            <p>Sorry, no such page was found!</p>
           </section>
         </div>
       </div>

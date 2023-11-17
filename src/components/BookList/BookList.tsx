@@ -25,13 +25,9 @@ export default function BookList() {
     </li>
   ));
 
-  if (data) {
-    return (
-      <div className="col">
-        <ul className="row row-cols-1 row-cols-sm-2 g-4">{list}</ul>
-      </div>
-    );
-  } else {
-    return <></>;
-  }
+  return (
+    <div className="col">
+      <ul className="row row-cols-1 row-cols-sm-2 g-4">{list}</ul>
+    </div>
+  );
 }

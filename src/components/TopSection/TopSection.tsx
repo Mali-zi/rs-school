@@ -1,11 +1,10 @@
 import React, { useCallback, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import { Outlet, useNavigate } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 import { selectNumber } from '../../features/booksPerPageSlice';
 import { setSearchQuery } from '../../features/searchSlice';
 
 export default function TopSection() {
-  const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const booksPerPage = useAppSelector(
     (state) => state.booksPerPage.selectedNumber
@@ -29,7 +28,6 @@ export default function TopSection() {
       dispatch(setSearchQuery(query));
       setIsValid(true);
       setIsSubmitted(true);
-      navigate(`/1`);
     } else {
       setIsValid(false);
     }
@@ -70,7 +68,7 @@ export default function TopSection() {
               htmlFor="search-form"
               className="form-label d-flex flex-column justify-content-start align-items-start fs-5"
             >
-              Search for your favorite books by title
+              Search for your favorite books
               <div className="container-fluid d-flex p-0 align-items-stretch mt-2">
                 <input
                   id="search-form"

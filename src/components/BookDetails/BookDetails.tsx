@@ -10,21 +10,15 @@ export default function BookDetails() {
   const {
     data: bookDetails,
     isLoading: detailsLoading,
+    isFetching,
     isError,
-    error: detailsError,
   } = libraryApi.useGetDetailsQuery(key ?? skipToken);
 
-  // useEffect(() => {
-  //   if (key) {
-  //     dispatch(fetchDetails(key));
-  //   }
-  // }, [key]);
-
   if (isError) {
-    return <h2>Error: {detailsError.toString()}</h2>;
+    return <h2>Oops! Something went wrong!</h2>;
   }
 
-  if (detailsLoading) {
+  if (detailsLoading || isFetching) {
     return (
       <div className="col">
         <h2 data-testid="loading">Loading...</h2>

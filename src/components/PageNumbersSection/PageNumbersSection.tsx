@@ -62,7 +62,7 @@ export default function PageNumbersSection() {
           className="d-flex flex-row flex-wrap"
         >
           {pageNumbers}
-        </ul>{' '}
+        </ul>
       </div>
     );
   } else {

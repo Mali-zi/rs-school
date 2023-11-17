@@ -30,3 +30,14 @@ li {
   list-style: none;
   text-decoration: none;
 }
+
+.page404 {
+  display: block;
+  position: relative;
+  margin: 0 auto;
+  top: 50vh;
+  font-size: 3rem;
+  font-weight: 700;
+  text-align: center;
+  color: brown;
+}

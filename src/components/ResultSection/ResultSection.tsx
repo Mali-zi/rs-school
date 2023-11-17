@@ -1,12 +1,16 @@
-import React from 'react';
-import { Outlet } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Outlet, useNavigate } from 'react-router-dom';
 
 import PageNumbersSection from '../PageNumbersSection/PageNumbersSection';
 import BookList from '../BookList/BookList';
-import { useAppSelector } from '../../app/hooks';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { libraryApi } from '../../app/services/api';
+import { setCurentPage } from '../../features/curentPageSlice';
 
 export default function ResultSection() {
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+
   const booksPerPage = useAppSelector(
     (state) => state.booksPerPage.selectedNumber
   );
@@ -16,19 +20,28 @@ export default function ResultSection() {
   const {
     data,
     isLoading: resultLoading,
+    isFetching,
     isError,
-    error: fetchError,
   } = libraryApi.useGetBooksQuery({
     searchQuery,
     curentPage,
     booksPerPage,
   });
 
+  useEffect(() => {
+    navigate(`/1`);
+  }, []);
+
+  useEffect(() => {
+    navigate('/1');
+    dispatch(setCurentPage(1));
+  }, [booksPerPage, searchQuery]);
+
   if (isError) {
-    return <h2>Error: {fetchError.toString()}</h2>;
+    return <h2>Oops! Something went wrong!</h2>;
   }
 
-  if (resultLoading) {
+  if (resultLoading || isFetching) {
     return <h2>Loading...</h2>;
   } else {
     if (data && data.docs && data.numFound) {
