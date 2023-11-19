@@ -23,7 +23,6 @@ describe('<App />', () => {
         <App />
       </MemoryRouter>
     );
-
     expect(screen.getByText(/Page not found/i)).toBeInTheDocument();
   });
 });

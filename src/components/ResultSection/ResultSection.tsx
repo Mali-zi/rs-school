@@ -29,10 +29,6 @@ export default function ResultSection() {
   });
 
   useEffect(() => {
-    navigate(`/1`);
-  }, []);
-
-  useEffect(() => {
     navigate('/1');
     dispatch(setCurentPage(1));
   }, [booksPerPage, searchQuery]);

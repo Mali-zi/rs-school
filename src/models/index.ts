@@ -41,3 +41,11 @@ export interface IData {
   docs: IBook[];
   numFound: number;
 }
+
+export interface IDetailsSection {
+  bookDetails: IBookDetails;
+}
+
+export interface IBookProps {
+  book: IBook;
+}

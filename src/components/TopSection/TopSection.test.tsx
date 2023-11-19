@@ -1,14 +1,15 @@
 import React from 'react';
 import userEvent from '@testing-library/user-event';
-import { cleanup, render, screen } from '@testing-library/react';
+import { cleanup, screen } from '@testing-library/react';
 import TopSection from './TopSection';
 import { BrowserRouter } from 'react-router-dom';
+import { renderWithProviders } from '../../utils/test-utils';
 
 afterEach(cleanup);
 
 describe('TopSection', () => {
   it('Display the correct number of options', () => {
-    render(
+    renderWithProviders(
       <BrowserRouter>
         <TopSection />
       </BrowserRouter>
@@ -16,29 +17,50 @@ describe('TopSection', () => {
     expect(screen.getAllByRole('option').length).toBe(5);
   });
 
-  it('Display the text input', () => {
-    render(
+  it('Display the text input', async () => {
+    renderWithProviders(
       <BrowserRouter>
         <TopSection />
-      </BrowserRouter>
+      </BrowserRouter>,
+      {
+        preloadedState: {
+          search: { searchQuery: '' },
+          curentPage: { curentPage: 1 },
+          booksPerPage: { selectedNumber: 10 },
+        },
+      }
     );
-    expect(screen.getByTestId('searchbox')).toBeInTheDocument();
+    screen.getByTestId('searchbox');
   });
 
   it('Display the default value 10', () => {
-    render(
+    renderWithProviders(
       <BrowserRouter>
         <TopSection />
-      </BrowserRouter>
+      </BrowserRouter>,
+      {
+        preloadedState: {
+          search: { searchQuery: '' },
+          curentPage: { curentPage: 1 },
+          booksPerPage: { selectedNumber: 10 },
+        },
+      }
     );
     expect(screen.getByTestId(/selectedNumber/i)).toHaveValue('10');
   });
 
   it('Allow user to change item number per page', () => {
-    render(
+    renderWithProviders(
       <BrowserRouter>
         <TopSection />
-      </BrowserRouter>
+      </BrowserRouter>,
+      {
+        preloadedState: {
+          search: { searchQuery: '' },
+          curentPage: { curentPage: 1 },
+          booksPerPage: { selectedNumber: 10 },
+        },
+      }
     );
     userEvent.selectOptions(screen.getByRole('combobox'), '20');
     const selectedNum = screen.getByText('20') as HTMLInputElement;
@@ -54,13 +76,20 @@ describe('TopSection', () => {
     );
   });
 
-  it('Form getting submitted with correct input values', async () => {
+  it('The form is sent with the correct input values', async () => {
     const user = userEvent.setup();
 
-    render(
+    renderWithProviders(
       <BrowserRouter>
         <TopSection />
-      </BrowserRouter>
+      </BrowserRouter>,
+      {
+        preloadedState: {
+          search: { searchQuery: '' },
+          curentPage: { curentPage: 1 },
+          booksPerPage: { selectedNumber: 10 },
+        },
+      }
     );
 
     const inputElement: HTMLInputElement = screen.getByTestId('searchbox');
@@ -74,10 +103,17 @@ describe('TopSection', () => {
   it('Empty searchbox error shown', async () => {
     const user = userEvent.setup();
 
-    render(
+    renderWithProviders(
       <BrowserRouter>
         <TopSection />
-      </BrowserRouter>
+      </BrowserRouter>,
+      {
+        preloadedState: {
+          search: { searchQuery: '' },
+          curentPage: { curentPage: 1 },
+          booksPerPage: { selectedNumber: 10 },
+        },
+      }
     );
     const inputElement: HTMLInputElement = screen.getByTestId('searchbox');
 

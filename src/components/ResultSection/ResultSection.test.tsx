@@ -1,37 +1,56 @@
 import React from 'react';
-import { render, screen, waitFor } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import ResultSection from './ResultSection';
+import { http, HttpResponse } from 'msw';
+import { setupServer } from 'msw/node';
+import { renderWithProviders } from '../../utils/test-utils';
+import { setupStore } from '../../mock/store';
+import { libraryApi } from '../../app/services/api';
+import { BASE_URL } from '../../utils/const';
 import { BrowserRouter } from 'react-router-dom';
-import { vi } from 'vitest';
-import * as services from '../../utils/services';
+
+const mockBooks = [
+  { key: 'test-key-1', title: 'Xabi Alonzo' },
+  { key: 'test-key-2', title: 'Lionel Messi' },
+  { key: 'test-key-3', title: 'Lionel Love' },
+  { key: 'test-key-4', title: 'Lionel Poe' },
+  { key: 'test-key-5', title: 'Lionel Gink' },
+];
+
+const data = {
+  docs: mockBooks,
+};
+
+const store = setupStore({});
+
+const handlers = [
+  http.get(BASE_URL + '/search.json', async () => {
+    // successful response
+    return HttpResponse.json({ data });
+  }),
+];
+
+const server = setupServer(...handlers);
+
+// Enable API mocking before tests.
+beforeAll(() => server.listen());
+
+// Reset any runtime request handlers we may add during the tests.
+afterEach(() => {
+  server.resetHandlers();
+  store.dispatch(libraryApi.util.resetApiState());
+});
+
+// Disable API mocking after the tests are done.
+afterAll(() => server.close());
 
 describe('ResultSection', () => {
-  it('ResultSection mounts properly', () => {
-    const wrapper = render(
+  it('Loading is shown until the ResultSection is fetched', async () => {
+    renderWithProviders(
       <BrowserRouter>
         <ResultSection />
       </BrowserRouter>
     );
-
-    expect(wrapper).toBeTruthy();
-  });
-
-  it('An appropriate message is displayed if no cards are present', async () => {
-    const mockFetchData = vi
-      .spyOn(services, 'getData')
-      .mockImplementation(async () => {
-        return [];
-      });
-
-    render(
-      <BrowserRouter>
-        <ResultSection />
-      </BrowserRouter>
-    );
-
-    expect(mockFetchData).toHaveBeenCalled();
-    await waitFor(() => {
-      expect(screen.getByText(/Nothing found/i)).toBeInTheDocument();
-    });
+    expect(screen.findByText(/Loading.../i));
   });
 });

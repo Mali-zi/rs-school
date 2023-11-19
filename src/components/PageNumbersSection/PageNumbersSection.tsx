@@ -33,6 +33,7 @@ export default function PageNumbersSection() {
       <li key={index} className="mx-1 number-list">
         <input
           type="radio"
+          data-testid="radio"
           className="btn-check"
           name={`btnradio-${item}`}
           id={`btnradio-${item}`}
