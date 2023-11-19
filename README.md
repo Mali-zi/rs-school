@@ -4,4 +4,4 @@
 - Code Quality Tools: ESLint + Prettier + Husky
 - Deploy: [link](https://mali-zi-react-redux-rtk.netlify.app)
 - Screenshot:
-- ![](https://github.com/Mali-zi/r-school/blob/react-redux-rtk/src/img/screenshot.JPG)
+- ![](https://github.com/Mali-zi/rs-school/blob/react-redux-rtk/src/img/screenshot.JPG)
