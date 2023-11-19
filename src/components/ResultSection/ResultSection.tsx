@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
-
 import PageNumbersSection from '../PageNumbersSection/PageNumbersSection';
 import BookList from '../BookList/BookList';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { libraryApi } from '../../app/services/api';
 import { setCurentPage } from '../../features/curentPageSlice';
+import { setLoading, setFetching } from '../../features/loadingSlice';
 
 export default function ResultSection() {
   const navigate = useNavigate();
@@ -32,6 +32,14 @@ export default function ResultSection() {
     navigate('/1');
     dispatch(setCurentPage(1));
   }, [booksPerPage, searchQuery]);
+
+  useEffect(() => {
+    dispatch(setLoading(resultLoading));
+  }, [resultLoading]);
+
+  useEffect(() => {
+    dispatch(setFetching(isFetching));
+  }, [isFetching]);
 
   if (isError) {
     return <h2>Oops! Something went wrong!</h2>;

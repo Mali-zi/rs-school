@@ -2,6 +2,7 @@ import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import booksPerPageReducer from '../features/booksPerPageSlice';
 import searchReducer from '../features/searchSlice';
 import curentPageReducer from '../features/curentPageSlice';
+import loadingReducer from '../features/loadingSlice';
 import { setupListeners } from '@reduxjs/toolkit/query';
 import { libraryApi } from './services/api';
 import type { PreloadedState } from '@reduxjs/toolkit';
@@ -12,6 +13,7 @@ export const rootReducer = combineReducers({
   booksPerPage: booksPerPageReducer,
   search: searchReducer,
   curentPage: curentPageReducer,
+  loading: loadingReducer,
 });
 
 export const store = configureStore({
@@ -20,6 +22,7 @@ export const store = configureStore({
     booksPerPage: booksPerPageReducer,
     search: searchReducer,
     curentPage: curentPageReducer,
+    loading: loadingReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat().concat(libraryApi.middleware),
@@ -34,6 +37,7 @@ export const setupStore = (preloadedState?: PreloadedState<RootState>) => {
       booksPerPage: booksPerPageReducer,
       search: searchReducer,
       curentPage: curentPageReducer,
+      loading: loadingReducer,
     },
     preloadedState,
   });
