@@ -20,7 +20,6 @@ export default function BookList() {
   if (data) {
     return (
       <div className="col">
-        <p>Hello!</p>
         <ul className="row row-cols-1 row-cols-sm-2 g-4">
           {data.docs.map((book) => (
             <li key={book.key} data-testid="list-item">
