@@ -17,7 +17,7 @@
   },
   "lint-staged": {
     "**/*.{ts,tsx}": "npm run lint",
-    "src/**/*.{js,jsx,ts,tsx,css,scss}": "npm run fix:format"
+    "src/**/*.{js,jsx,ts,tsx,css,scss}": "npm run fix"
   },
   "husky": {
     "hooks": {
