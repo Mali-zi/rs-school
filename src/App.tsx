@@ -7,10 +7,9 @@ import FormSec from './components/FormSec';
 function App() {
   return (
     <Routes>
-      <Route path="/" element={<Main />}>
-        <Route path="1-form" element={<FormFirst />} />
-        <Route path="2-form" element={<FormSec />} />
-      </Route>
+      <Route path="/" element={<Main />} />
+      <Route path="1-form" element={<FormFirst />} />
+      <Route path="2-form" element={<FormSec />} />
     </Routes>
   );
 }

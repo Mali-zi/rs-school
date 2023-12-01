@@ -1,0 +1,21 @@
+.togglePassword {
+  background: none;
+  border: none;
+  cursor: pointer;
+  position: absolute;
+  top: 40px;
+  right: 15px;
+}
+
+.formContainer {
+  width: 500px;
+  background-color: white;
+  border-radius: 3%;
+  box-shadow: 30px;
+  padding: 10px;
+}
+
+.inputWrapper {
+  position: relative;
+  height: 110px;
+}
