@@ -1,9 +1,15 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import styles from './FormFirst.module.scss';
 import Eye from './Eye';
+import CountryInput from './CountryInput';
+import { useAppDispatch } from '../app/hooks';
+import {
+  setFilterCountries,
+  setInputValue,
+} from '../features/selectedCountriesSlice';
 
 interface IFormInput {
   username: string;
@@ -30,13 +36,7 @@ const schema = yup
       .min(3, 'Name must be at least 3 characters long')
       .max(10, 'Name must not be more than 10 characters long')
       .required('Name is required'),
-    age: yup
-      .number()
-      .min(18, 'You must be at least 18 years')
-      .max(60, 'You must be at most 60 years')
-      .positive('Age must be positive')
-      .integer()
-      .required('Age is required'),
+    age: yup.number().integer().positive().required().max(100),
     gender: yup
       .string()
       .oneOf(['male', 'female', 'other'] as const)
@@ -76,11 +76,20 @@ export default function FormFirst() {
   const onSubmit = (data: IFormInput): void => {
     console.log(data);
     console.log('errors', errors);
-    // console.log('errors.name.type', errors.name.type);
   };
-
+  const dropdownRef = useRef<HTMLDivElement>(null);
   const [firstIsOpen, setFIrstIsOpen] = useState(false);
   const [secIsOpen, setSecIsOpen] = useState(false);
+  const dispatch = useAppDispatch();
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setValue(e.target.value);
+    dispatch(setFilterCountries(e.target.value));
+    dispatch(setInputValue(e.target.value));
+  };
+
+  const [value, setValue] = useState('');
+  const [isEdit, setIsEdit] = useState(false);
 
   return (
     <section className="container vh-100 position-relative">
@@ -133,21 +142,25 @@ export default function FormFirst() {
                 {...register('age')}
               />
               <div className="form-text text-danger">
-                {errors.age && errors.age.message}
+                {errors.age && 'Age is required and not more than 100 years'}
               </div>
             </div>
 
-            <div className={styles.inputWrapper}>
+            <div ref={dropdownRef} className={styles.inputWrapper}>
               <label htmlFor="country" className="form-label fw-semibold mb-1">
                 Country
               </label>
               <input
                 type="text"
                 id="country"
-                autoComplete="country"
+                autoFocus
                 className="form-control"
-                {...register('country')}
+                onChange={handleChange}
+                value={value}
+                onFocus={() => setIsEdit(true)}
+                // {...register('country')}
               />
+              {isEdit && <CountryInput />}
               <div className="form-text text-danger">
                 {errors.country && errors.country.message}
               </div>
