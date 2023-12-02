@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+import ProfileList from './ProfileList';
 
 export default function Main() {
   const navigate = useNavigate();
@@ -31,6 +32,7 @@ export default function Main() {
             </button>
           </div>
           <hr />
+          <ProfileList />
         </div>
       </div>
     </div>

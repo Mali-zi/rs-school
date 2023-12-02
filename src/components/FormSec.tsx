@@ -7,9 +7,9 @@ export default function FormSec() {
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    console.log('Input value:', inputRef.current.value);
-    console.log('Select value:', selectRef.current.value);
-    console.log('Checkbox value:', checkboxRef.current.checked);
+    // console.log('Input value:', inputRef.current.value);
+    // console.log('Select value:', selectRef.current.value);
+    // console.log('Checkbox value:', checkboxRef.current.checked);
   }
 
   return (

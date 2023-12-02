@@ -20,6 +20,8 @@ const selectedCountriesSlice = createSlice({
         } else {
           state.filterCountries = ['No options'];
         }
+      } else {
+        state.filterCountries = allCountries;
       }
     },
 
@@ -31,12 +33,26 @@ const selectedCountriesSlice = createSlice({
       state.selectedCountry = action.payload;
     },
 
+    resetValue: (state) => {
+      const findValue = allCountries.find(
+        (country) => country === state.inputValue
+      );
+      if (!findValue) {
+        state.inputValue = '';
+      }
+    },
+
     setEditMode: (state, action) => {
       state.editMode = action.payload;
     },
   },
 });
 
-export const { setFilterCountries, setInputValue, setCountry, setEditMode } =
-  selectedCountriesSlice.actions;
+export const {
+  setFilterCountries,
+  setInputValue,
+  setCountry,
+  setEditMode,
+  resetValue,
+} = selectedCountriesSlice.actions;
 export default selectedCountriesSlice.reducer;

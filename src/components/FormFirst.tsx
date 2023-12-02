@@ -1,102 +1,53 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { useNavigate } from 'react-router';
 import styles from './FormFirst.module.scss';
+import CustomInput from './CustomInput';
 import Eye from './Eye';
-import CountryInput from './CountryInput';
-import { useAppDispatch } from '../app/hooks';
-import {
-  setFilterCountries,
-  setInputValue,
-} from '../features/selectedCountriesSlice';
+import { useAppDispatch, useAppSelector } from '../app/hooks';
+import { schema } from './Schema';
+import CountryList from './CountryList';
+import { IFormInput } from '../utils/interfaces';
+import { addProfile } from '../features/dataSlice';
 
-interface IFormInput {
-  username: string;
-  age: number;
-  gender: string;
-  country: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
-  accept: boolean;
-}
-
-type FormSchema = yup.InferType<typeof schema>;
-
-const getCharacterValidationError = (str: string) => {
-  return `Your password must have at least 1 ${str} character`;
-};
-
-const schema = yup
-  .object({
-    username: yup
-      .string()
-      .matches(/^\S*$/, 'Whitespace is not allowed')
-      .min(3, 'Name must be at least 3 characters long')
-      .max(10, 'Name must not be more than 10 characters long')
-      .required('Name is required'),
-    age: yup.number().integer().positive().required().max(100),
-    gender: yup
-      .string()
-      .oneOf(['male', 'female', 'other'] as const)
-      .required('Gender is required'),
-    country: yup.string().required('Country is required'),
-    email: yup.string().email().required('Email is required'),
-    password: yup
-      .string()
-      .min(8, 'Password must be at least 8 characters')
-      .max(32, 'Password length must not be more than 32 characters')
-      .matches(/^\S*$/, 'Whitespace is not allowed')
-      .matches(/[0-9]/, getCharacterValidationError('digit'))
-      .matches(/[a-z]/, getCharacterValidationError('lowercase'))
-      .matches(/[A-Z]/, getCharacterValidationError('uppercase'))
-      .matches(/[@$!%*#?&+=()]/, getCharacterValidationError('special'))
-      .required('Password is required'),
-    confirmPassword: yup
-      .string()
-      .oneOf([yup.ref('password')], 'Passwords must match')
-      .required('Confirm Password is required'),
-    accept: yup
-      .boolean()
-      .oneOf([true], 'Your agreement is required')
-      .required('Your agreement is required'),
-  })
-  .required();
-
-export default function FormFirst() {
+export default function App() {
   const {
     register,
+    control,
     handleSubmit,
+    reset,
     formState: { errors },
-  } = useForm<FormSchema>({
+  } = useForm<IFormInput>({
+    defaultValues: {
+      country: '',
+    },
+    mode: 'onChange',
     resolver: yupResolver(schema),
   });
+
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   const onSubmit = (data: IFormInput): void => {
     console.log(data);
     console.log('errors', errors);
+    dispatch(addProfile(data));
+    navigate('/');
+    reset();
   };
-  const dropdownRef = useRef<HTMLDivElement>(null);
+
   const [firstIsOpen, setFIrstIsOpen] = useState(false);
   const [secIsOpen, setSecIsOpen] = useState(false);
-  const dispatch = useAppDispatch();
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setValue(e.target.value);
-    dispatch(setFilterCountries(e.target.value));
-    dispatch(setInputValue(e.target.value));
-  };
-
-  const [value, setValue] = useState('');
-  const [isEdit, setIsEdit] = useState(false);
+  const editMode = useAppSelector((state) => state.selectedCountries.editMode);
 
   return (
     <section className="container vh-100 position-relative">
       <div className="position-absolute top-50 start-50 translate-middle">
         <div className={styles.formContainer}>
+          <h2 className="text-primary text-center mt-3">Sign in</h2>
+
           <form className={styles.signUpForm} onSubmit={handleSubmit(onSubmit)}>
-            <h2 className="text-primary text-center mt-3">Sign in</h2>
             <div className={styles.inputWrapper}>
               <label htmlFor="username" className="form-label fw-semibold mb-1">
                 Name
@@ -146,21 +97,9 @@ export default function FormFirst() {
               </div>
             </div>
 
-            <div ref={dropdownRef} className={styles.inputWrapper}>
-              <label htmlFor="country" className="form-label fw-semibold mb-1">
-                Country
-              </label>
-              <input
-                type="text"
-                id="country"
-                autoFocus
-                className="form-control"
-                onChange={handleChange}
-                value={value}
-                onFocus={() => setIsEdit(true)}
-                // {...register('country')}
-              />
-              {isEdit && <CountryInput />}
+            <div className={styles.inputWrapper}>
+              <CustomInput control={control} />
+              {editMode && <CountryList />}
               <div className="form-text text-danger">
                 {errors.country && errors.country.message}
               </div>

@@ -19,3 +19,34 @@
   position: relative;
   height: 110px;
 }
+
+.dropdown {
+  position: relative;
+}
+
+.dropdownList {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  max-height: 220px;
+  width: 480px;
+  z-index: 4;
+  background-color: #eff6fd;
+  border-width: 4px;
+  border-color: black;
+  border-radius: 8px;
+  cursor: pointer;
+  overflow-y: scroll;
+  padding: 0;
+  margin: 0;
+}
+
+.country {
+  display: block;
+  padding: 0 10px;
+}
+
+.country:hover {
+  color: white;
+  background-color: #6c757d;
+}
