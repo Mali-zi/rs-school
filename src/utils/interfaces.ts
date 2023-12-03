@@ -24,6 +24,7 @@ export interface IProfile {
 
 export interface IData {
   profileList: IProfile[];
+  image: '';
 }
 
 export interface IProfileProps {

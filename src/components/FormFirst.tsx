@@ -10,6 +10,7 @@ import { schema } from './Schema';
 import CountryList from './CountryList';
 import { IFormInput } from '../utils/interfaces';
 import { addProfile } from '../features/dataSlice';
+import CustomImage from './CustomImage';
 
 export default function App() {
   const { register, control, handleSubmit, reset, formState } =
@@ -109,17 +110,10 @@ export default function App() {
             </div>
 
             <div className={styles.inputWrapper}>
-              <label htmlFor="image" className="form-label fw-semibold mb-1">
-                Picture
-              </label>
-              <input
-                id="image"
-                type="file"
-                accept="image/png, image/jpeg"
-                multiple={false}
-                className="form-control"
-                {...register('image')}
-              />
+              <CustomImage control={control} />
+              <div className="form-text text-danger">
+                {formState.errors.image && formState.errors.image.message}
+              </div>
             </div>
 
             <div className={styles.inputWrapper}>

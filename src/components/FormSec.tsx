@@ -8,6 +8,7 @@ import { schema } from './Schema';
 import { addProfile } from '../features/dataSlice';
 import { fileToBase64 } from '../utils/fileToBase64';
 import { IErrors } from '../utils/interfaces';
+import { allCountries } from '../utils/const';
 
 export default function FormSec() {
   const navigate = useNavigate();
@@ -28,7 +29,6 @@ export default function FormSec() {
   };
 
   const [errors, setErrors] = useState(initErrors);
-
   const nameRef = useRef<null | HTMLInputElement>(null);
   const genderRef = useRef<null | HTMLSelectElement>(null);
   const ageRef = useRef<null | HTMLInputElement>(null);
@@ -36,7 +36,7 @@ export default function FormSec() {
   const passwordRef = useRef<null | HTMLInputElement>(null);
   const confirmPasswordRef = useRef<null | HTMLInputElement>(null);
   const acceptRef = useRef<null | HTMLInputElement>(null);
-  const countryRef = useRef<null | HTMLInputElement>(null);
+  const countryRef = useRef<null | HTMLSelectElement>(null);
   const imageRef = useRef<null | HTMLInputElement>(null);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -65,26 +65,18 @@ export default function FormSec() {
       accept: acceptRef.current?.checked,
     };
 
-    console.log('data.image', data?.image);
-
     const isFormValid = await schema.isValid(data, {
-      abortEarly: false, // Prevent aborting validation after first error
+      abortEarly: false,
     });
 
     if (isFormValid) {
-      // If form is valid, continue submission.
       setErrors(initErrors);
       dispatch(addProfile(data));
       navigate('/');
-      console.log('Form is valid');
     } else {
-      // If form is not valid, check which fields are incorrect:
       schema.validate(data, { abortEarly: false }).catch((err) => {
-        console.log('err.errors', err.errors);
-        // Collect all errors in { fieldName: boolean } format:
         const addErrors = err.inner.reduce(
           (acc: IErrors, error: ValidationError) => {
-            console.log('error', error);
             if (error.path) {
               return {
                 ...acc,
@@ -94,9 +86,6 @@ export default function FormSec() {
           },
           {}
         );
-        console.log('addErrors', addErrors);
-
-        // Update form errors state:
         setErrors(addErrors);
       });
     }
@@ -194,13 +183,18 @@ export default function FormSec() {
                 >
                   Country
                 </label>
-                <input
-                  id="country"
-                  type="text"
-                  ref={countryRef}
-                  autoComplete="country"
-                  className="form-control"
-                />
+                <select id="country" ref={countryRef} className="form-control">
+                  <option value="" disabled>
+                    Please Select...
+                  </option>
+                  {allCountries.map((country) => {
+                    return (
+                      <option value="female" key={country}>
+                        {country}
+                      </option>
+                    );
+                  })}
+                </select>
                 <div className="form-text text-danger">
                   {errors.country && <span>Country is required.</span>}
                 </div>
