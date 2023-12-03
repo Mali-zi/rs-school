@@ -8,7 +8,7 @@
 }
 
 .formContainer {
-  width: 500px;
+  width: 650px;
   background-color: white;
   border-radius: 3%;
   box-shadow: 30px;
@@ -17,7 +17,7 @@
 
 .inputWrapper {
   position: relative;
-  height: 110px;
+  height: 130px;
 }
 
 .dropdown {
@@ -49,4 +49,16 @@
 .country:hover {
   color: white;
   background-color: #6c757d;
+}
+
+.imgWrapper {
+  height: 60px;
+  width: 60px;
+  border: 2px dashed black;
+}
+
+.imgStyle {
+  width: 100%;
+  height: 100%;
+  position: absolute;
 }

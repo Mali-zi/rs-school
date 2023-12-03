@@ -6,6 +6,7 @@ export default function Profile({ profile, index }: IProfileProps) {
     username,
     age,
     gender,
+    image,
     country,
     email,
     password,
@@ -29,19 +30,22 @@ export default function Profile({ profile, index }: IProfileProps) {
 
   return (
     <div className={bord}>
-      <div className="card-body text-dark">
-        <ul className="list-group list-group-flush">
-          <li className="list-group-item">Name: {username}</li>
-          <li className="list-group-item">Age: {age}</li>
-          <li className="list-group-item">Gender: {gender}</li>
-          <li className="list-group-item">Country: {country}</li>
-          <li className="list-group-item">Email: {email}</li>
-          <li className="list-group-item">Password: {password}</li>
-          <li className="list-group-item">
-            Confirm Password: {confirmPassword}
-          </li>
-          <li className="list-group-item">Accept: {String(accept)}</li>
-        </ul>
+      <div className="card">
+        <img src={image} className="card-img-top" alt="picture" />
+        <div className="card-body text-dark">
+          <ul className="list-group list-group-flush">
+            <li className="list-group-item">Name: {username}</li>
+            <li className="list-group-item">Age: {age}</li>
+            <li className="list-group-item">Gender: {gender}</li>
+            <li className="list-group-item">Country: {country}</li>
+            <li className="list-group-item">Email: {email}</li>
+            <li className="list-group-item">Password: {password}</li>
+            <li className="list-group-item">
+              Confirm Password: {confirmPassword}
+            </li>
+            <li className="list-group-item">Accept: {String(accept)}</li>
+          </ul>
+        </div>
       </div>
     </div>
   );

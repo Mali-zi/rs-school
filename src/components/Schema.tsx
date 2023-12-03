@@ -12,17 +12,22 @@ export const schema = yup
       .min(3, 'Name must be at least 3 characters long')
       .max(10, 'Name must not be more than 10 characters long')
       .required('Name is required'),
-    age: yup.number().integer().positive().required().max(100),
+    age: yup
+      .number()
+      .integer()
+      .positive()
+      .max(100)
+      .required('Age must be positive and not more than 100'),
     gender: yup
       .string()
       .oneOf(['male', 'female', 'other'] as const)
       .required('Gender is required'),
+    image: yup.string().required('Picture is required'),
     country: yup.string().required('Country is required'),
     email: yup.string().email().required('Email is required'),
     password: yup
       .string()
       .min(8, 'Password must be at least 8 characters')
-      .max(32, 'Password length must not be more than 32 characters')
       .matches(/^\S*$/, 'Whitespace is not allowed')
       .matches(/[0-9]/, getCharacterValidationError('digit'))
       .matches(/[a-z]/, getCharacterValidationError('lowercase'))

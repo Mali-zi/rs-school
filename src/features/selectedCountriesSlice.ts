@@ -6,7 +6,7 @@ const selectedCountriesSlice = createSlice({
   initialState: {
     selectedCountry: allCountries[0],
     filterCountries: allCountries,
-    inputValue: '',
+    inputValue: 'Afghanistan',
     editMode: false,
   },
   reducers: {

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useNavigate } from 'react-router';
@@ -12,33 +12,43 @@ import { IFormInput } from '../utils/interfaces';
 import { addProfile } from '../features/dataSlice';
 
 export default function App() {
-  const {
-    register,
-    control,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm<IFormInput>({
-    defaultValues: {
-      country: '',
-    },
-    mode: 'onChange',
-    resolver: yupResolver(schema),
-  });
+  const { register, control, handleSubmit, reset, formState } =
+    useForm<IFormInput>({
+      defaultValues: {
+        username: '',
+        age: 18,
+        gender: 'male',
+        image: '',
+        country: 'Afghanistan',
+        email: '',
+        password: '',
+        confirmPassword: '',
+        accept: false,
+      },
+      mode: 'onChange',
+      resolver: yupResolver(schema),
+    });
 
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
   const onSubmit = (data: IFormInput): void => {
-    console.log(data);
-    console.log('errors', errors);
     dispatch(addProfile(data));
     navigate('/');
     reset();
   };
 
+  useEffect(() => {
+    if (formState.isValid) {
+      setIsDisabled(false);
+    } else {
+      setIsDisabled(true);
+    }
+  }, [formState]);
+
   const [firstIsOpen, setFIrstIsOpen] = useState(false);
   const [secIsOpen, setSecIsOpen] = useState(false);
+  const [isDisabled, setIsDisabled] = useState(true);
   const editMode = useAppSelector((state) => state.selectedCountries.editMode);
 
   return (
@@ -60,7 +70,7 @@ export default function App() {
                 {...register('username')}
               />
               <div className="form-text text-danger">
-                {errors.username && errors.username.message}
+                {formState.errors.username && formState.errors.username.message}
               </div>
             </div>
 
@@ -93,15 +103,30 @@ export default function App() {
                 {...register('age')}
               />
               <div className="form-text text-danger">
-                {errors.age && 'Age is required and not more than 100 years'}
+                {formState.errors.age &&
+                  'Age is required and not more than 100 years'}
               </div>
+            </div>
+
+            <div className={styles.inputWrapper}>
+              <label htmlFor="image" className="form-label fw-semibold mb-1">
+                Picture
+              </label>
+              <input
+                id="image"
+                type="file"
+                accept="image/png, image/jpeg"
+                multiple={false}
+                className="form-control"
+                {...register('image')}
+              />
             </div>
 
             <div className={styles.inputWrapper}>
               <CustomInput control={control} />
               {editMode && <CountryList />}
               <div className="form-text text-danger">
-                {errors.country && errors.country.message}
+                {formState.errors.country && formState.errors.country.message}
               </div>
             </div>
 
@@ -117,7 +142,7 @@ export default function App() {
                 {...register('email')}
               />
               <div className="form-text text-danger">
-                {errors.email && errors.email.message}
+                {formState.errors.email && formState.errors.email.message}
               </div>
             </div>
 
@@ -142,7 +167,7 @@ export default function App() {
                 {...register('password')}
               />
               <div className="form-text text-danger">
-                {errors.password ? errors.password.message : ' '}
+                {formState.errors.password && formState.errors.password.message}
               </div>
             </div>
 
@@ -170,7 +195,8 @@ export default function App() {
                 {...register('confirmPassword')}
               />
               <div className="form-text text-danger">
-                {errors.confirmPassword && errors.confirmPassword.message}
+                {formState.errors.confirmPassword &&
+                  formState.errors.confirmPassword.message}
               </div>
             </div>
 
@@ -185,7 +211,7 @@ export default function App() {
                 By signing up you agree to our Terms and conditions
               </label>
               <div className="form-text text-danger">
-                {errors.accept && errors.accept.message}
+                {formState.errors.accept && formState.errors.accept.message}
               </div>
             </div>
 
@@ -194,6 +220,7 @@ export default function App() {
                 type="submit"
                 value="Submit"
                 className="btn btn-primary mb-3"
+                disabled={isDisabled}
               />
             </div>
           </form>
