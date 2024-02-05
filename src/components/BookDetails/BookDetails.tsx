@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { IBookDetails } from '../../models';
 import { BASE_URL } from '../../utils/const';
 import DetailsSection from './DetailsSection';
 import { getData } from '../../utils/services';
+import { useOutsideClick } from '../../hooks/useOutsideClick';
 
 export default function BookDetails() {
   const [bookDetails, setBookDetails] = useState<IBookDetails | null>(null);
@@ -11,6 +12,13 @@ export default function BookDetails() {
   const [error, setError] = useState<null | Error>(null);
 
   const { key } = useParams();
+  const navigate = useNavigate();
+
+  const goHome = () => navigate(-1);
+
+  const ref = useOutsideClick(() => {
+    goHome();
+  });
 
   async function fetchDetails(key: string | undefined) {
     const url = BASE_URL + `works/${key}.json`;
@@ -45,7 +53,9 @@ export default function BookDetails() {
     if (bookDetails) {
       return (
         <div className="col">
-          <DetailsSection bookDetails={bookDetails} />
+          <div ref={ref}>
+            <DetailsSection bookDetails={bookDetails} />
+          </div>
         </div>
       );
     } else {
