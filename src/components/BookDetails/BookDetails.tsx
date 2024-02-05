@@ -45,14 +45,14 @@ export default function BookDetails() {
 
   if (detailsLoading) {
     return (
-      <div className="col-5">
+      <div className="col">
         <h2 data-testid="loading">Loading...</h2>
       </div>
     );
   } else {
     if (bookDetails) {
       return (
-        <div className="col-5">
+        <div className="col">
           <div ref={ref}>
             <DetailsSection bookDetails={bookDetails} />
           </div>
@@ -60,7 +60,7 @@ export default function BookDetails() {
       );
     } else {
       return (
-        <div className="col-5">
+        <div className="col">
           <h2> Nothing found, try again! </h2>
         </div>
       );
