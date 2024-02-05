@@ -11,14 +11,14 @@ export default function BookDetails() {
   const [detailsLoading, setDetailsLoading] = useState(true);
   const [error, setError] = useState<null | Error>(null);
 
+  const ref = useOutsideClick(() => {
+    goHome();
+  });
+
   const { key } = useParams();
   const navigate = useNavigate();
 
   const goHome = () => navigate(-1);
-
-  const ref = useOutsideClick(() => {
-    goHome();
-  });
 
   async function fetchDetails(key: string | undefined) {
     const url = BASE_URL + `works/${key}.json`;
